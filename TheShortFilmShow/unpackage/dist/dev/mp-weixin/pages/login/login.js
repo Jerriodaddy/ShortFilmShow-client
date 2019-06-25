@@ -136,68 +136,58 @@ __webpack_require__.r(__webpack_exports__);
 
 {
   data: function data() {
-    return {
-      username: '',
-      password: '' };
+    return {};
+
 
   },
   methods: {
 
-    Register: function Register() {
+    register: function register() {
       uni.navigateTo({
         url: '../register/register' });
 
     },
 
-    login: function login() {
-      var username = this.username;
-      var password = this.password;
-      if (username.length < 1) {
+    login: function login(res) {
+      var formObject = res.detail.value;
+      var username = formObject.username;
+      var password = formObject.password;
+      if (username.length == 0 || password.length == 0) {
         uni.showToast({
-          icon: 'none',
-          title: 'Your name is not valid' });
+          title: 'Username or password can not be null' });
 
-        return;
+      } else {
+        var ServerUrl = this.$serverUrl;
+
+        uni.request({
+          url: ServerUrl + '/login',
+          method: 'POST',
+          data: {
+            username: username,
+            password: password },
+
+          success: function success(res) {
+            console.log(res.data);
+            var status = res.data.status;
+            if (status == 200) {
+              uni.showToast({
+                icon: 'success',
+                title: 'Welcome' });
+
+              Vue.setGlobalUserInfo(res.data.data);
+              uni.navigateTo({
+                url: '../index/index' });
+
+            } else if (status == 500) {
+              uni.showToast({
+                icon: 'none',
+                title: res.data.msg,
+                duration: 3000 });
+
+            }
+          } });
+
       }
-      if (password.length < 1) {
-        uni.showToast({
-          icon: 'none',
-          title: 'Your password is not valid' });
-
-        return;
-      }
-
-      var ServerUrl = this.$serverUrl;
-
-      uni.request({
-
-        url: ServerUrl + '/login',
-        method: 'POST',
-        data: {
-          username: username,
-          password: password },
-
-        success: function success(res) {
-          console.log(res.data);
-          var status = res.data.status;
-          if (status == 200) {
-            uni.showToast({
-              icon: 'none',
-              title: 'Welcome' });
-
-            uni.navigateTo({
-              url: '../classify/classify' });
-
-          } else if (status == 500) {
-            uni.showToast({
-              icon: 'none',
-              title: res.data.msg,
-              duration: 3000 });
-
-          }
-
-        } });
-
     } },
 
 
@@ -244,61 +234,18 @@ var render = function() {
       _vm._m(0),
       _c(
         "form",
-        { attrs: { bindsubmit: "formSubmit", bindreset: "formReset" } },
+        { attrs: { eventid: "03c73e1e-1" }, on: { submit: _vm.login } },
         [
           _c("view", { staticClass: "itemView" }, [
             _c("input", {
-              directives: [
-                {
-                  name: "model",
-                  rawName: "v-model",
-                  value: _vm.username,
-                  expression: "username"
-                }
-              ],
               staticClass: "input",
-              attrs: {
-                name: "username",
-                placeholder: "Username",
-                eventid: "03c73e1e-0"
-              },
-              domProps: { value: _vm.username },
-              on: {
-                input: function($event) {
-                  if ($event.target.composing) {
-                    return
-                  }
-                  _vm.username = $event.target.value
-                }
-              }
+              attrs: { name: "username", placeholder: "Username" }
             })
           ]),
           _c("view", { staticClass: "itemView" }, [
             _c("input", {
-              directives: [
-                {
-                  name: "model",
-                  rawName: "v-model",
-                  value: _vm.password,
-                  expression: "password"
-                }
-              ],
               staticClass: "input",
-              attrs: {
-                name: "password",
-                password: "",
-                placeholder: "Password",
-                eventid: "03c73e1e-1"
-              },
-              domProps: { value: _vm.password },
-              on: {
-                input: function($event) {
-                  if ($event.target.composing) {
-                    return
-                  }
-                  _vm.password = $event.target.value
-                }
-              }
+              attrs: { name: "password", placeholder: "Password" }
             })
           ]),
           _c(
@@ -307,19 +254,15 @@ var render = function() {
             [
               _c(
                 "button",
-                {
-                  staticClass: "loginBtn",
-                  attrs: { type: "default", eventid: "03c73e1e-2" },
-                  on: { tap: _vm.login }
-                },
+                { staticClass: "loginBtn", attrs: { formType: "submit" } },
                 [_vm._v("Login")]
               ),
               _c(
                 "button",
                 {
                   staticClass: "registerBtn",
-                  attrs: { eventid: "03c73e1e-3" },
-                  on: { tap: _vm.Register }
+                  attrs: { eventid: "03c73e1e-0" },
+                  on: { tap: _vm.register }
                 },
                 [_vm._v("Sign up now!")]
               )

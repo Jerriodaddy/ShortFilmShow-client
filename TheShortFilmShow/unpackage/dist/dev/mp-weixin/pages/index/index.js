@@ -329,7 +329,10 @@ __webpack_require__.r(__webpack_exports__);
         title: 'Loading...' });
 
       uni.request({
-        url: serverUrl + '/video/showAll?page=' + page,
+        url: serverUrl + '/video/showAll',
+        data: {
+          page: page },
+
         method: "POST",
         success: function success(res) {
           uni.hideLoading();

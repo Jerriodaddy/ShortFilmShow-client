@@ -141,17 +141,17 @@ __webpack_require__.r(__webpack_exports__);
 
 {
   data: function data() {
-    return {
-      username: '',
-      password: '',
-      email: '' };
+    return {};
+
 
   },
   methods: {
-    Register: function Register() {
-      var email = this.email;
-      var username = this.username;
-      var password = this.password;
+    register: function register(res) {
+      var formObject = res.detail.value;
+      var email = formObject.email;
+      var username = formObject.username;
+      var password = formObject.password;
+      var vPassword = formObject.vPassword;
 
       if (email.length < 1 || !~email.indexOf('@')) {
         uni.showToast({
@@ -159,78 +159,67 @@ __webpack_require__.r(__webpack_exports__);
           title: 'Your email address is not valid' });
 
         return;
+      } else {
+        // TODO 验证邮箱
+
+        // 改成邮箱登录？
       }
-      if (username.length < 1) {
+
+      if (username.length == 0 || password.length == 0) {
+        uni.showToast({
+          title: 'Username or password can not be null' });
+
+      } else if (password != vPassword) {
         uni.showToast({
           icon: 'none',
-          title: 'Your name is not valid' });
+          title: 'Vertify password is different with password' });
 
-        return;
-      }
-      if (password.length < 1) {
-        uni.showToast({
-          icon: 'none',
-          title: 'Your password is not valid' });
+      } else {
+        var ServerUrl = this.$serverUrl;
 
-        return;
-      }
-      if (password != this.v_password) {
-        uni.showToast({
-          icon: 'none',
-          title: 'please type same password while vertify' });
+        uni.request({
+          url: ServerUrl + '/register',
+          method: 'POST',
+          data: {
+            email: email,
+            username: username,
+            password: password },
 
-        return;
-      }
-
-      var ServerUrl = this.$serverUrl;
-
-      uni.request({
-        url: ServerUrl + '/register',
-        method: 'POST',
-        data: {
-          username: username,
-          password: password,
-          email: email },
-
-        header: {
-          'content-type': 'application/json' },
+          header: {
+            'content-type': 'application/json' },
 
 
-        success: function success(res) {
-          console.log(res.data);
-          var status = res.data.status;
-          if (status == 200) {
+          success: function success(res) {
+            console.log(res.data);
+            var status = res.data.status;
+            if (status == 200) {
+              uni.showToast({
+                icon: 'none',
+                title: 'Register Complete' });
+
+
+              Vue.setGlobalUserInfo(res.data.data);
+
+              uni.navigateTo({
+                url: '../login/login' });
+
+            } else if (status == 500) {
+              uni.showToast({
+                icon: 'none',
+                title: res.data.msg });
+
+            }
+          },
+          fail: function fail(res) {
+            console.log(res.data);
             uni.showToast({
               icon: 'none',
-              title: 'Register Complete' });
+              title: res.data.msg });
 
-            uni.navigateTo({
-              url: '../login/login' });
+          } });
 
-          } else if (status == 500) {
-            uni.showToast({
-              icon: 'none',
-              title: res.data.msg,
-              duration: 3000 });
-
-          }
-
-        }, fail: function fail(res) {
-          console.log(res.data);
-          uni.showToast({
-            icon: 'none',
-            title: res.data.msg });
-
-        } });
-
-    } }
-
-
-  /*onLoad: function() {
-        	uni.setNavigationBarTitle({
-        		title: "Sign up"
-        	});
-        }*/ };exports.default = _default;
+      }
+    } } };exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ "./node_modules/@dcloudio/uni-mp-weixin/dist/index.js")["default"]))
 
 /***/ }),
@@ -263,130 +252,38 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c(
     "view",
-    { staticClass: "Reg-back" },
+    { staticClass: "reg-back" },
     [
       _vm._m(0),
       _c(
         "form",
-        { attrs: { bindsubmit: "formSubmit", bindreset: "formReset" } },
+        {
+          attrs: { bindreset: "formReset", eventid: "6ffc4486-0" },
+          on: { submit: _vm.register }
+        },
         [
           _c("view", { staticClass: "itemView" }, [
             _c("input", {
-              directives: [
-                {
-                  name: "model",
-                  rawName: "v-model",
-                  value: _vm.email,
-                  expression: "email"
-                }
-              ],
               staticClass: "input",
-              attrs: {
-                name: "username",
-                placeholder: "Email",
-                eventid: "6ffc4486-0"
-              },
-              domProps: { value: _vm.email },
-              on: {
-                input: function($event) {
-                  if ($event.target.composing) {
-                    return
-                  }
-                  _vm.email = $event.target.value
-                }
-              }
+              attrs: { name: "email", placeholder: "Email" }
             })
           ]),
           _c("view", { staticClass: "itemView" }, [
             _c("input", {
-              directives: [
-                {
-                  name: "model",
-                  rawName: "v-model",
-                  value: _vm.username,
-                  expression: "username"
-                }
-              ],
               staticClass: "input",
-              attrs: {
-                name: "username",
-                placeholder: "Username",
-                eventid: "6ffc4486-1"
-              },
-              domProps: { value: _vm.username },
-              on: {
-                confirm: function($event) {
-                  _vm.blur - _vm.input
-                },
-                input: function($event) {
-                  if ($event.target.composing) {
-                    return
-                  }
-                  _vm.username = $event.target.value
-                }
-              }
+              attrs: { name: "username", placeholder: "Username" }
             })
           ]),
           _c("view", { staticClass: "itemView" }, [
             _c("input", {
-              directives: [
-                {
-                  name: "model",
-                  rawName: "v-model",
-                  value: _vm.password,
-                  expression: "password"
-                }
-              ],
               staticClass: "input",
-              attrs: {
-                name: "password",
-                password: "",
-                placeholder: "Password",
-                eventid: "6ffc4486-2"
-              },
-              domProps: { value: _vm.password },
-              on: {
-                confirm: function($event) {
-                  _vm.blur - _vm.input
-                },
-                input: function($event) {
-                  if ($event.target.composing) {
-                    return
-                  }
-                  _vm.password = $event.target.value
-                }
-              }
+              attrs: { name: "password", placeholder: "Password" }
             })
           ]),
           _c("view", { staticClass: "itemView" }, [
             _c("input", {
-              directives: [
-                {
-                  name: "model",
-                  rawName: "v-model",
-                  value: _vm.v_password,
-                  expression: "v_password"
-                }
-              ],
               staticClass: "input",
-              attrs: {
-                name: "vertify password",
-                password: "",
-                placeholder: "Vertify Password",
-                eventid: "6ffc4486-3"
-              },
-              domProps: { value: _vm.v_password },
-              on: {
-                confirm: function($event) {
-                  _vm.blur - _vm.input
-                },
-                input: function($event) {
-                  if ($event.target.composing) {
-                    return
-                  }
-                  _vm.v_password = $event.target.value
-                }
-              }
+              attrs: { name: "vPassword", placeholder: "Vertify Password" }
             })
           ]),
           _c(
@@ -395,11 +292,7 @@ var render = function() {
             [
               _c(
                 "button",
-                {
-                  staticClass: "Register",
-                  attrs: { eventid: "6ffc4486-4" },
-                  on: { tap: _vm.Register }
-                },
+                { staticClass: "register", attrs: { formType: "submit" } },
                 [_vm._v("Complete!")]
               )
             ],

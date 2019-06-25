@@ -9,23 +9,23 @@ page {
 	display: -ms-flexbox;
 	display: flex;
 }
-.Reg-back {
+.reg-back {
 	height: 100%;
 	background-color: black;
 }
 .itemView {
 	height: 60rpx;
 	margin-left: 30rpx;
-	margin-right:30rpx;
+	margin-right: 30rpx;
 	margin-bottom: 20rpx;
 	background-color: #F0F0F0;
 }
 .btn-row {
 	width: 100%;
 }
-.Register { 
-	width: 50%; 
-	margin:0px auto;
+.register {
+	width: 50%;
+	margin: 0px auto;
 	background-color: orange;
 	color: white;
 }

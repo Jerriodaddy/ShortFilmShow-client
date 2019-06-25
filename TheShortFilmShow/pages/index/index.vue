@@ -214,7 +214,10 @@
 					title: 'Loading...',
 				});
 				uni.request({
-					url: serverUrl + '/video/showAll?page=' + page,
+					url: serverUrl + '/video/showAll',
+					data: {
+						page: page,
+					},
 					method: "POST",
 					success: (res) => {
 						uni.hideLoading();

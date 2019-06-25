@@ -3,16 +3,16 @@
 		<view class="picture">
 			<image src="../../static/assets/logo.png" class="logo" mode="aspectFit"></image>
 		</view>
-		<form bindsubmit="formSubmit" bindreset="formReset">
+		<form @submit="login">
 			<view class="itemView">
-				<input name="username" v-model="username" class="input" placeholder="Username" />
+				<input name="username" class="input" placeholder="Username" />
 			</view>
 			<view class="itemView">
-				<input name="password" class="input" v-model="password" password placeholder="Password" />
+				<input name="password" class="input" placeholder="Password" />
 			</view>
 			<view class="button-area">
-				<button class = "loginBtn" type="default" @tap="login">Login</button>
-				<button class = "registerBtn"  @tap="Register">Sign up now!</button>
+				<button class="loginBtn" formType="submit">Login</button>
+				<button class="registerBtn" @tap="register">Sign up now!</button>
 			</view>
 		</form>
 	</view>
@@ -22,77 +22,67 @@
 	export default {
 		data() {
 			return {
-				username: '',
-				password: ''
+
 			};
 		},
-		methods:{
-			
-			Register(){
+		methods: {
+
+			register() {
 				uni.navigateTo({
-					url:'../register/register',
+					url: '../register/register',
 				})
 			},
-			
-			login(){
-				var username = this.username;
-				var password = this.password;
-				if (username.length < 1) {
-				    uni.showToast({
-				        icon: 'none',
-				        title: 'Your name is not valid'
-				    });
-				    return;
-				}
-				if (password.length < 1) {
-				    uni.showToast({
-				        icon: 'none',
-				        title: 'Your password is not valid'
-				    });
-				    return;
-				}
-				
-				var ServerUrl = this.$serverUrl;
-				
-				uni.request({
-					
-					url:ServerUrl + '/login',
-					method:'POST',
-					data:{
-						username:username,
-						password:password,
-					},
-					success: (res) => {
-						console.log(res.data);
-						var status = res.data.status;
-						if(status == 200){
-							uni.showToast({
-									icon: 'none',
+
+			login(res) {
+				var formObject = res.detail.value;
+				var username = formObject.username;
+				var password = formObject.password;
+				if (username.length == 0 || password.length == 0) {
+					uni.showToast({
+						title: 'Username or password can not be null',
+					});
+				} else {
+					var ServerUrl = this.$serverUrl;
+
+					uni.request({
+						url: ServerUrl + '/login',
+						method: 'POST',
+						data: {
+							username: username,
+							password: password,
+						},
+						success: (res) => {
+							console.log(res.data);
+							var status = res.data.status;
+							if (status == 200) {
+								uni.showToast({
+									icon: 'success',
 									title: 'Welcome'
 								});
+								Vue.setGlobalUserInfo(res.data.data); 
 								uni.navigateTo({
-									url: '../classify/classify',
+									url: '../index/index',
 								});
-						}else if(status == 500){
-							uni.showToast({
+							} else if (status == 500) {
+								uni.showToast({
 									icon: 'none',
 									title: res.data.msg,
 									duration: 3000
 								});
+							}
 						}
-						
-					}
-				})
+					});
+				}
 			},
 		},
-		
+
 		onLoad: function() {
 			uni.setNavigationBarTitle({
 				title: "Sign in"
 			});
-		
+
 		}
-		
+
 	}
 </script>
 
@@ -101,36 +91,42 @@
 		width: 100%;
 		height: 100%;
 	}
-	
+
 	.picture {
 		display: flex;
 	}
+
 	.lg-back {
 		height: 100%;
-		background-color:black;
+		background-color: black;
 	}
-	
+
 	.itemView {
 		height: 60upx;
 		margin-left: 30upx;
-		margin-right:30upx;
+		margin-right: 30upx;
 		margin-bottom: 20upx;
 		background-color: #F0F0F0;
 	}
-	
+
 	.input {
-		BORDER-RIGHT: 0px solid; BORDER-TOP: 0px solid; BORDER-LEFT: 0px solid; BORDER-BOTTOM: 0px solid;
+		BORDER-RIGHT: 0px solid;
+		BORDER-TOP: 0px solid;
+		BORDER-LEFT: 0px solid;
+		BORDER-BOTTOM: 0px solid;
 		//border-color: orange;
 	}
-	.loginBtn { 
-		width: 40%; 
-		margin-right:30px;
-		float:right;
+
+	.loginBtn {
+		width: 40%;
+		margin-right: 30px;
+		float: right;
 	}
-	.registerBtn { 
-		width: 40%; 
-		margin-left:30px;
-		float:left;
+
+	.registerBtn {
+		width: 40%;
+		margin-left: 30px;
+		float: left;
 		background-color: orange;
 		color: white;
 	}

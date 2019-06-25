@@ -88,7 +88,7 @@ _vue.default.config.productionTip = false;
 _App.default.mpType = 'app';
 _vue.default.prototype.$serverUrl = 'http://127.0.0.1:8080';
 
-_vue.default.prototype.getGlobalUserInfo = function (user) {
+_vue.default.prototype.setGlobalUserInfo = function (user) {
   uni.setStorageSync('userInfo', user);
 };
 
