@@ -150,23 +150,29 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-
-
-
-
 {
   data: function data() {
     return {
-      faceUrl: '../../static/icons/logo.png' };
+      faceUrl: '../../static/icons/logo.png',
+      userInfo: {} };
 
   },
   onLoad: function onLoad() {
     uni.setNavigationBarTitle({
       title: "Profile" });
 
+
+    var userInfo = this.getGlobalUserInfo();
+    if (userInfo == null) {
+      return;
+    } else {
+      this.userInfo = userInfo;
+    }
+    // console.log(userInfo)
   },
   methods: {
     changeFaceImage: function changeFaceImage() {
+      var userInfo = this.userInfo;
       var that = this;
       uni.chooseImage({
         count: 1, //默认9
@@ -178,8 +184,9 @@ __webpack_require__.r(__webpack_exports__);
           uni.showLoading({
             title: 'Uploading...' });
 
+
           uni.uploadFile({
-            url: that.$serverUrl + '/user/uploadFace?userId=' + 'tmp-user-id',
+            url: that.$serverUrl + '/user/uploadFace?userId=' + userInfo.id,
             filePath: tempFilePaths[0],
             name: 'file',
             success: function success(res) {
@@ -200,6 +207,42 @@ __webpack_require__.r(__webpack_exports__);
               }
             } });
 
+        } });
+
+    },
+
+    goToLogin: function goToLogin() {
+      uni.navigateTo({
+        url: '../login/login' });
+
+    },
+
+    logout: function logout() {
+      var that = this;
+      uni.request({
+        url: that.$serverUrl + '/logout?userId' + this.userInfo.id,
+        method: 'POST',
+        header: {
+          'content-type': 'application/json' },
+
+        success: function success(res) {
+          console.log(res.data);
+          var status = res.data.status;
+          if (status == 200) {
+            uni.showToast({
+              icon: 'none',
+              title: 'Logout' });
+
+            that.removeGlobalUserInfo();
+            uni.navigateTo({
+              url: '../login/login' });
+
+          } else if (status == 500) {
+            uni.showToast({
+              icon: 'none',
+              title: res.data.msg });
+
+          }
         } });
 
     } } };exports.default = _default;
@@ -238,19 +281,26 @@ var render = function() {
       "view",
       { staticClass: "picbox" },
       [
-        _c("navigator", { attrs: { url: "../login/login" } }, [
-          _c("image", {
-            staticClass: "profilepic",
-            attrs: { src: _vm.faceUrl }
-          })
-        ]),
+        _c("image", {
+          staticClass: "profilepic",
+          attrs: { src: _vm.faceUrl, eventid: "fa6a801e-0" },
+          on: { click: _vm.changeFaceImage }
+        }),
         _c(
           "button",
           {
-            attrs: { type: "primary", eventid: "fa6a801e-0" },
-            on: { click: _vm.changeFaceImage }
+            attrs: { type: "primary", eventid: "fa6a801e-1" },
+            on: { click: _vm.goToLogin }
           },
-          [_vm._v("change picture")]
+          [_vm._v("login")]
+        ),
+        _c(
+          "button",
+          {
+            attrs: { type: "primary", eventid: "fa6a801e-2" },
+            on: { click: _vm.logout }
+          },
+          [_vm._v("logout")]
         )
       ],
       1

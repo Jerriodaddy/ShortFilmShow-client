@@ -93,7 +93,18 @@ _vue.default.prototype.setGlobalUserInfo = function (user) {
 };
 
 _vue.default.prototype.getGlobalUserInfo = function () {
-  return uni.getStorageSync('userInfo');
+  var value = uni.getStorageSync('userInfo');
+  if (value.length == 0) {
+    uni.navigateTo({
+      url: '/pages/login/login' });
+
+  } else {
+    return value;
+  }
+};
+
+_vue.default.prototype.removeGlobalUserInfo = function () {
+  uni.removeStorageSync('userInfo');
 };
 
 var app = new _vue.default(_objectSpread({},

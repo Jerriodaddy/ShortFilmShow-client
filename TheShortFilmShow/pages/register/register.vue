@@ -61,7 +61,8 @@
 					});
 				} else {
 					var ServerUrl = this.$serverUrl;
-
+					
+					var that = this;
 					uni.request({
 						url: ServerUrl + '/register',
 						method: 'POST',
@@ -73,7 +74,6 @@
 						header: {
 							'content-type': 'application/json'
 						},
-
 						success: (res) => {
 							console.log(res.data);
 							var status = res.data.status;
@@ -83,8 +83,8 @@
 									title: 'Register Complete'
 								});
 								
-								Vue.setGlobalUserInfo(res.data.data);
-								
+								that.setGlobalUserInfo(res.data.data);
+							
 								uni.navigateTo({
 									url: '../login/login',
 								});
@@ -94,13 +94,6 @@
 									title: res.data.msg,
 								});
 							}
-						},
-						fail: (res) => {
-							console.log(res.data);
-							uni.showToast({
-								icon: 'none',
-								title: res.data.msg,
-							});
 						}
 					});
 				}

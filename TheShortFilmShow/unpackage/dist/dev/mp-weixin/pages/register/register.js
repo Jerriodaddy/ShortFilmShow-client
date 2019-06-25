@@ -177,6 +177,7 @@ __webpack_require__.r(__webpack_exports__);
       } else {
         var ServerUrl = this.$serverUrl;
 
+        var that = this;
         uni.request({
           url: ServerUrl + '/register',
           method: 'POST',
@@ -188,7 +189,6 @@ __webpack_require__.r(__webpack_exports__);
           header: {
             'content-type': 'application/json' },
 
-
           success: function success(res) {
             console.log(res.data);
             var status = res.data.status;
@@ -198,7 +198,7 @@ __webpack_require__.r(__webpack_exports__);
                 title: 'Register Complete' });
 
 
-              Vue.setGlobalUserInfo(res.data.data);
+              that.setGlobalUserInfo(res.data.data);
 
               uni.navigateTo({
                 url: '../login/login' });
@@ -209,13 +209,6 @@ __webpack_require__.r(__webpack_exports__);
                 title: res.data.msg });
 
             }
-          },
-          fail: function fail(res) {
-            console.log(res.data);
-            uni.showToast({
-              icon: 'none',
-              title: res.data.msg });
-
           } });
 
       }

@@ -140,14 +140,14 @@ __webpack_require__.r(__webpack_exports__);
 
 
   },
+  onLoad: function onLoad() {
+    uni.setNavigationBarTitle({
+      title: "Sign in" });
+
+
+  },
+
   methods: {
-
-    register: function register() {
-      uni.navigateTo({
-        url: '../register/register' });
-
-    },
-
     login: function login(res) {
       var formObject = res.detail.value;
       var username = formObject.username;
@@ -157,10 +157,9 @@ __webpack_require__.r(__webpack_exports__);
           title: 'Username or password can not be null' });
 
       } else {
-        var ServerUrl = this.$serverUrl;
-
+        var that = this;
         uni.request({
-          url: ServerUrl + '/login',
+          url: that.$serverUrl + '/login',
           method: 'POST',
           data: {
             username: username,
@@ -174,10 +173,8 @@ __webpack_require__.r(__webpack_exports__);
                 icon: 'success',
                 title: 'Welcome' });
 
-              Vue.setGlobalUserInfo(res.data.data);
-              uni.navigateTo({
-                url: '../index/index' });
-
+              that.setGlobalUserInfo(res.data.data);
+              that.goback();
             } else if (status == 500) {
               uni.showToast({
                 icon: 'none',
@@ -188,15 +185,19 @@ __webpack_require__.r(__webpack_exports__);
           } });
 
       }
-    } },
+    },
 
+    register: function register() {
+      uni.navigateTo({
+        url: '../register/register' });
 
-  onLoad: function onLoad() {
-    uni.setNavigationBarTitle({
-      title: "Sign in" });
+    },
 
+    goback: function goback() {
+      uni.navigateBack({
+        delta: 1 });
 
-  } };exports.default = _default;
+    } } };exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ "./node_modules/@dcloudio/uni-mp-weixin/dist/index.js")["default"]))
 
 /***/ }),

@@ -1,13 +1,9 @@
 <template>
 	<view class="background">
 		<view class="picbox">
-			<navigator url="../login/login">
-				<!-- <image src="../../static/icons/logo.png" class="profilepic"></image> -->
-				<image :src="faceUrl" class="profilepic"></image>
-
-			</navigator>
-			<!-- <text class="change">change picture</text> -->
-			<button type="primary" @click="changeFaceImage">change picture</button>
+			<image :src="faceUrl" class="profilepic" @click="changeFaceImage"></image>
+			<button type="primary" @click="goToLogin">login</button>
+			<button type="primary" @click="logout">logout</button>
 		</view>
 
 		<view class="information-card">
@@ -43,15 +39,25 @@
 		data() {
 			return {
 				faceUrl: '../../static/icons/logo.png',
+				userInfo: {},
 			}
 		},
 		onLoad() {
 			uni.setNavigationBarTitle({
 				title: "Profile"
 			});
+
+			var userInfo = this.getGlobalUserInfo();
+			if (userInfo == null) {
+				return;
+			} else {
+				this.userInfo = userInfo;
+			}
+			// console.log(userInfo)
 		},
 		methods: {
 			changeFaceImage: function() {
+				var userInfo = this.userInfo;
 				var that = this;
 				uni.chooseImage({
 					count: 1, //默认9
@@ -63,8 +69,9 @@
 						uni.showLoading({
 							title: 'Uploading...'
 						})
+
 						uni.uploadFile({
-							url: that.$serverUrl + '/user/uploadFace?userId=' + 'tmp-user-id',
+							url: that.$serverUrl + '/user/uploadFace?userId=' + userInfo.id,
 							filePath: tempFilePaths[0],
 							name: 'file',
 							success: (res) => {
@@ -87,6 +94,42 @@
 						});
 					}
 				});
+			},
+			
+			goToLogin: function(){
+				uni.navigateTo({
+					url: '../login/login',
+				})
+			},
+			
+			logout: function() {
+				var that = this;
+				uni.request({
+					url: that.$serverUrl + '/logout?userId' + this.userInfo.id,
+					method: 'POST',
+					header: {
+						'content-type': 'application/json'
+					},
+					success: (res) => {
+						console.log(res.data);
+						var status = res.data.status;
+						if (status == 200) {
+							uni.showToast({
+								icon: 'none',
+								title: 'Logout'
+							});
+							that.removeGlobalUserInfo();
+							uni.navigateTo({
+								url: '../login/login',
+							});
+						} else if (status == 500) {
+							uni.showToast({
+								icon: 'none',
+								title: res.data.msg,
+							});
+						}
+					},
+				});
 			}
 		}
 	}
@@ -97,10 +140,12 @@
 		height: 100%;
 		width: 100%;
 	}
+
 	.background {
 		height: 100%;
 		background-color: #000000;
 	}
+
 	/* 头像框 */
 	.picbox {
 		display: flex;
@@ -111,23 +156,27 @@
 		align-items: center;
 		justify-content: center;
 	}
+
 	.profilepic {
 		width: 120upx;
 		height: 120upx;
 		border-radius: 60upx;
 	}
+
 	/* 更改头像 */
-	.change {
+	/* .change {
 		color: white;
 		font-size: x-small;
 		margin-top: 20upx;
-	}
+	} */
+
 	.information-card {
 		display: flex;
 		height: 600upx;
 		margin-top: 100upx;
 		color: #E80080;
 	}
+
 	/* 信息栏 */
 	/* 左侧标题 */
 	.title-line {
@@ -137,30 +186,36 @@
 		height: 600upx;
 		margin-left: 50upx;
 	}
+
 	.infoline {
 		height: 100upx;
 		display: flex;
 	}
+
 	.info-title {
 		color: #888888;
 		margin-left: 20upx;
 		font-size: x-small;
 	}
+
 	/* 右侧内容 */
 	.info-content {
 		color: white;
 		margin-left: 50upx;
 		font-size: small;
 	}
+
 	.content-line {
 		display: flex;
 		flex-direction: column;
 		height: 600upx;
 		justify-content: space-around;
 	}
+
 	.content-space {
 		margin-left: 200upx;
 	}
+
 	/* “编辑”按钮样式 */
 	.edit-button {
 		width: 100%;
@@ -170,10 +225,12 @@
 		align-content: center;
 		margin-top: 50upx;
 	}
+
 	.edit-text {
 		color: #929292;
 		font-size: large;
 	}
+
 	.film-upload {
 		display: flex;
 		width: 100%;
@@ -181,6 +238,7 @@
 		justify-content: center;
 		align-items: center;
 	}
+
 	.film-upload-text {
 		color: white;
 		font-size: middle;
