@@ -1,83 +1,98 @@
 <template>
 	<view class="lg-back">
 		<view class="picture">
-			<image src="../../static/assets/logo3.png" class="logo" mode=""></image>
+			<image src="../../static/assets/logo.png" class="logo" mode="aspectFit"></image>
 		</view>
 		<form bindsubmit="formSubmit" bindreset="formReset">
 			<view class="itemView">
-				<input name="username" v-model="account" class="input" placeholder="Username" />
+				<input name="username" v-model="username" class="input" placeholder="Username" />
 			</view>
 			<view class="itemView">
 				<input name="password" class="input" v-model="password" password placeholder="Password" />
 			</view>
-			<view class="btn-row">
-				<button type="primary" class="primary" @tap="bindLogin">Login</button>
-			</view>
-			<view class="action-row">
-				<navigator class="Reg" url="../register/register">Register</navigator>
+			<view class="button-area">
+				<button class = "loginBtn" type="default" @tap="login">Login</button>
+				<button class = "registerBtn"  @tap="Register">Sign up now!</button>
 			</view>
 		</form>
 	</view>
 </template>
 
 <script>
-	import service from '../../service.js';
-	import aes from '../../my_aes.js'
 	export default {
 		data() {
 			return {
-				account: '',
+				username: '',
 				password: ''
 			};
 		},
 		methods:{
-			bindLogin(){
-				if (this.account.length < 5) {
-				    uni.showToast({
-				        icon: 'none',
-				        title: 'Your name musty be at least 5 characters'
-				    });
-				    return;
-				}
-				if (this.password.length < 6) {
-				    uni.showToast({
-				        icon: 'none',
-				        title: 'Your password must be at least 6 characters'
-				    });
-				    return;
-				}
-				uni.request({
-					
-					url:'http://localhost:8080/servlat/login',
-					data:{
-						username:this.account,
-						password:this.password,
-					},success: () => {
-						this.toMain(this.account);
-					},fail: () => {
-						uni.showToast({
-						    icon: 'none',
-						    title: 'Incorrect username of password',
-						});
-					}	
+			
+			Register(){
+				uni.navigateTo({
+					url:'../register/register',
 				})
 			},
-			toMain(userName) {
-			    this.login(userName);
-			    /**
-			     * 强制登录时使用reLaunch方式跳转过来
-			     * 返回首页也使用reLaunch方式
-			     */
-			    if (this.forcedLogin) {
-			        uni.reLaunch({
-			            url: '../index/index',
-			        });
-			    } else {
-			        uni.navigateBack();
-			    }
 			
-			}
+			login(){
+				var username = this.username;
+				var password = this.password;
+				if (username.length < 1) {
+				    uni.showToast({
+				        icon: 'none',
+				        title: 'Your name is not valid'
+				    });
+				    return;
+				}
+				if (password.length < 1) {
+				    uni.showToast({
+				        icon: 'none',
+				        title: 'Your password is not valid'
+				    });
+				    return;
+				}
+				
+				var ServerUrl = this.$serverUrl;
+				
+				uni.request({
+					
+					url:ServerUrl + '/login',
+					method:'POST',
+					data:{
+						username:username,
+						password:password,
+					},
+					success: (res) => {
+						console.log(res.data);
+						var status = res.data.status;
+						if(status == 200){
+							uni.showToast({
+									icon: 'none',
+									title: 'Welcome'
+								});
+								uni.navigateTo({
+									url: '../classify/classify',
+								});
+						}else if(status == 500){
+							uni.showToast({
+									icon: 'none',
+									title: res.data.msg,
+									duration: 3000
+								});
+						}
+						
+					}
+				})
+			},
+		},
+		
+		onLoad: function() {
+			uni.setNavigationBarTitle({
+				title: "Sign in"
+			});
+		
 		}
+		
 	}
 </script>
 
@@ -86,33 +101,37 @@
 		width: 100%;
 		height: 100%;
 	}
-
+	
+	.picture {
+		display: flex;
+	}
 	.lg-back {
 		height: 100%;
-		background-color: white;
+		background-color:black;
 	}
-
-	.logo {
-		display: flex;
-		width: 100%;
-	}
-
-
+	
 	.itemView {
-		height: 10%;
-		border: 1upx solid black;
-		border-radius: 2px;
-		background-color: #F8F8FF;
+		height: 60upx;
+		margin-left: 30upx;
+		margin-right:30upx;
+		margin-bottom: 20upx;
+		background-color: #F0F0F0;
 	}
-
-	.action-row {
-		width: 100%;
-		display: flex;
-		justify-content: center;
-		align-items: center;
+	
+	.input {
+		BORDER-RIGHT: 0px solid; BORDER-TOP: 0px solid; BORDER-LEFT: 0px solid; BORDER-BOTTOM: 0px solid;
+		//border-color: orange;
 	}
-
-	.Reg {
-		color: black;
+	.loginBtn { 
+		width: 40%; 
+		margin-right:30px;
+		float:right;
+	}
+	.registerBtn { 
+		width: 40%; 
+		margin-left:30px;
+		float:left;
+		background-color: orange;
+		color: white;
 	}
 </style>

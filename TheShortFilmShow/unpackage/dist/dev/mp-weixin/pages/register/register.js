@@ -113,7 +113,7 @@ __webpack_require__.r(__webpack_exports__);
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-/* WEBPACK VAR INJECTION */(function(uni) {Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;
+/* WEBPACK VAR INJECTION */(function(uni) {Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var _default =
 
 
 
@@ -136,70 +136,101 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-var _service = _interopRequireDefault(__webpack_require__(/*! ../../service.js */ "../../../../../../Users/jerrio/Desktop/JumboX/TheShortFilmShow/short-film-show-client/TheShortFilmShow/service.js"));function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}var _default =
+
+
 
 {
   data: function data() {
     return {
-      account: '',
+      username: '',
       password: '',
       email: '' };
 
   },
   methods: {
-    register: function register() {
-      if (this.email.length < 3 || !~this.email.indexOf('@')) {
+    Register: function Register() {
+      var email = this.email;
+      var username = this.username;
+      var password = this.password;
+
+      if (email.length < 1 || !~email.indexOf('@')) {
         uni.showToast({
           icon: 'none',
           title: 'Your email address is not valid' });
 
         return;
       }
-      if (this.account.length < 5) {
+      if (username.length < 1) {
         uni.showToast({
           icon: 'none',
-          title: 'Your name musty be at least 5 characters' });
+          title: 'Your name is not valid' });
 
         return;
       }
-      if (this.password.length < 6) {
+      if (password.length < 1) {
         uni.showToast({
           icon: 'none',
-          title: 'Your password must be at least 6 characters' });
+          title: 'Your password is not valid' });
 
         return;
       }
-      var data = {
-        account: this.account,
-        password: this.password,
-        email: this.email };
+      if (password != this.v_password) {
+        uni.showToast({
+          icon: 'none',
+          title: 'please type same password while vertify' });
 
+        return;
+      }
+
+      var ServerUrl = this.$serverUrl;
 
       uni.request({
-        url: 'http://localhost:8080/servlat/register',
+        url: ServerUrl + '/register',
         method: 'POST',
         data: {
-          username: this.username,
-          password: this.password },
+          username: username,
+          password: password,
+          email: email },
+
+        header: {
+          'content-type': 'application/json' },
 
 
         success: function success(res) {
+          console.log(res.data);
+          var status = res.data.status;
+          if (status == 200) {
+            uni.showToast({
+              icon: 'none',
+              title: 'Register Complete' });
+
+            uni.navigateTo({
+              url: '../login/login' });
+
+          } else if (status == 500) {
+            uni.showToast({
+              icon: 'none',
+              title: res.data.msg,
+              duration: 3000 });
+
+          }
+
+        }, fail: function fail(res) {
+          console.log(res.data);
           uni.showToast({
             icon: 'none',
-            title: 'Register Complete' });
-
-          uni.navigateTo({
-            url: '../login/login' });
-
-        },
-        fail: function fail() {
-          uni.showToast({
-            icon: 'none',
-            title: 'The network is out of order,please try again later' });
+            title: res.data.msg });
 
         } });
 
-    } } };exports.default = _default;
+    } }
+
+
+  /*onLoad: function() {
+        	uni.setNavigationBarTitle({
+        		title: "Sign up"
+        	});
+        }*/ };exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ "./node_modules/@dcloudio/uni-mp-weixin/dist/index.js")["default"]))
 
 /***/ }),
@@ -272,8 +303,8 @@ var render = function() {
                 {
                   name: "model",
                   rawName: "v-model",
-                  value: _vm.account,
-                  expression: "account"
+                  value: _vm.username,
+                  expression: "username"
                 }
               ],
               staticClass: "input",
@@ -282,13 +313,16 @@ var render = function() {
                 placeholder: "Username",
                 eventid: "6ffc4486-1"
               },
-              domProps: { value: _vm.account },
+              domProps: { value: _vm.username },
               on: {
+                confirm: function($event) {
+                  _vm.blur - _vm.input
+                },
                 input: function($event) {
                   if ($event.target.composing) {
                     return
                   }
-                  _vm.account = $event.target.value
+                  _vm.username = $event.target.value
                 }
               }
             })
@@ -312,11 +346,45 @@ var render = function() {
               },
               domProps: { value: _vm.password },
               on: {
+                confirm: function($event) {
+                  _vm.blur - _vm.input
+                },
                 input: function($event) {
                   if ($event.target.composing) {
                     return
                   }
                   _vm.password = $event.target.value
+                }
+              }
+            })
+          ]),
+          _c("view", { staticClass: "itemView" }, [
+            _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.v_password,
+                  expression: "v_password"
+                }
+              ],
+              staticClass: "input",
+              attrs: {
+                name: "vertify password",
+                password: "",
+                placeholder: "Vertify Password",
+                eventid: "6ffc4486-3"
+              },
+              domProps: { value: _vm.v_password },
+              on: {
+                confirm: function($event) {
+                  _vm.blur - _vm.input
+                },
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.v_password = $event.target.value
                 }
               }
             })
@@ -328,11 +396,11 @@ var render = function() {
               _c(
                 "button",
                 {
-                  staticClass: "primary",
-                  attrs: { type: "primary", eventid: "6ffc4486-3" },
-                  on: { tap: _vm.register }
+                  staticClass: "Register",
+                  attrs: { eventid: "6ffc4486-4" },
+                  on: { tap: _vm.Register }
                 },
-                [_vm._v("Complete")]
+                [_vm._v("Complete!")]
               )
             ],
             1
@@ -351,7 +419,7 @@ var staticRenderFns = [
     return _c("view", { staticClass: "picture" }, [
       _c("image", {
         staticClass: "logo",
-        attrs: { src: "../../static/assets/logo3.png", mode: "" }
+        attrs: { src: "../../static/assets/logo.png", mode: "aspectFit" }
       })
     ])
   }

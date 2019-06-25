@@ -12,43 +12,6 @@
 
 /***/ }),
 
-/***/ "../../../../../../Users/jerrio/Desktop/JumboX/TheShortFilmShow/short-film-show-client/TheShortFilmShow/service.js":
-/*!********************************************************************************************************!*\
-  !*** /Users/jerrio/Desktop/JumboX/TheShortFilmShow/short-film-show-client/TheShortFilmShow/service.js ***!
-  \********************************************************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-/* WEBPACK VAR INJECTION */(function(uni) {Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0; // 管理账号信息
-var USERS_KEY = 'USERS_KEY';
-// const STATE_KEY = 'STATE_KEY';
-
-var getUsers = function getUsers() {
-  var ret = '';
-  ret = uni.getStorageSync(USERS_KEY);
-  if (!ret) {
-    ret = '[]';
-  }
-  return JSON.parse(ret);
-};
-
-var addUser = function addUser(userInfo) {
-  var users = getUsers();
-  users.push({
-    account: userInfo.account,
-    password: userInfo.password });
-
-  uni.setStorageSync(USERS_KEY, JSON.stringify(users));
-};var _default =
-
-{
-  getUsers: getUsers,
-  addUser: addUser };exports.default = _default;
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ "./node_modules/@dcloudio/uni-mp-weixin/dist/index.js")["default"]))
-
-/***/ }),
-
 /***/ "./node_modules/@babel/runtime/regenerator/index.js":
 /*!**********************************************************!*\
   !*** ./node_modules/@babel/runtime/regenerator/index.js ***!

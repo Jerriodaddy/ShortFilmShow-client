@@ -15,54 +15,6 @@ Page((0, _mpvuePageFactory.default)(_login.default));
 
 /***/ }),
 
-/***/ "../../../../../../Users/jerrio/Desktop/JumboX/TheShortFilmShow/short-film-show-client/TheShortFilmShow/my_aes.js":
-/*!*******************************************************************************************************!*\
-  !*** /Users/jerrio/Desktop/JumboX/TheShortFilmShow/short-film-show-client/TheShortFilmShow/my_aes.js ***!
-  \*******************************************************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
- //aes加密
-function encrypt(word) {
-  var key = CryptoJS.enc.Utf8.parse("grpt05glhf#123jt"); //16位
-  var iv = CryptoJS.enc.Utf8.parse("grpt05glhf#123jt");
-  var encrypted = '';
-  if (typeof word == 'string') {
-    var srcs = CryptoJS.enc.Utf8.parse(word);
-    encrypted = CryptoJS.AES.encrypt(srcs, key, {
-      iv: iv,
-      mode: CryptoJS.mode.CBC,
-      padding: CryptoJS.pad.Pkcs7 });
-
-  } else if (typeof word == 'object') {//对象格式的转成json字符串
-    data = JSON.stringify(word);
-    var srcs = CryptoJS.enc.Utf8.parse(data);
-    encrypted = CryptoJS.AES.encrypt(srcs, key, {
-      iv: iv,
-      mode: CryptoJS.mode.CBC,
-      padding: CryptoJS.pad.Pkcs7 });
-
-  }
-  return encrypted.ciphertext.toString();
-}
-// aes解密
-function decrypt(word) {
-  var key = CryptoJS.enc.Utf8.parse("grpt05glhf#123jt");
-  var iv = CryptoJS.enc.Utf8.parse("grpt05glhf#123jt");
-  var encryptedHexStr = CryptoJS.enc.Hex.parse(word);
-  var srcs = CryptoJS.enc.Base64.stringify(encryptedHexStr);
-  var decrypt = CryptoJS.AES.decrypt(srcs, key, {
-    iv: iv,
-    mode: CryptoJS.mode.CBC,
-    padding: CryptoJS.pad.Pkcs7 });
-
-  var decryptedStr = decrypt.toString(CryptoJS.enc.Utf8);
-  return decryptedStr.toString();
-}
-
-/***/ }),
-
 /***/ "../../../../../../Users/jerrio/Desktop/JumboX/TheShortFilmShow/short-film-show-client/TheShortFilmShow/pages/login/login.vue":
 /*!*******************************************************************************************************************!*\
   !*** /Users/jerrio/Desktop/JumboX/TheShortFilmShow/short-film-show-client/TheShortFilmShow/pages/login/login.vue ***!
@@ -161,7 +113,7 @@ __webpack_require__.r(__webpack_exports__);
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-/* WEBPACK VAR INJECTION */(function(uni) {Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;
+/* WEBPACK VAR INJECTION */(function(uni) {Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var _default =
 
 
 
@@ -182,64 +134,79 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-
-
-var _service = _interopRequireDefault(__webpack_require__(/*! ../../service.js */ "../../../../../../Users/jerrio/Desktop/JumboX/TheShortFilmShow/short-film-show-client/TheShortFilmShow/service.js"));
-var _my_aes = _interopRequireDefault(__webpack_require__(/*! ../../my_aes.js */ "../../../../../../Users/jerrio/Desktop/JumboX/TheShortFilmShow/short-film-show-client/TheShortFilmShow/my_aes.js"));function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}var _default =
 {
   data: function data() {
     return {
-      account: '',
+      username: '',
       password: '' };
 
   },
   methods: {
-    bindLogin: function bindLogin() {var _this = this;
-      if (this.account.length < 5) {
+
+    Register: function Register() {
+      uni.navigateTo({
+        url: '../register/register' });
+
+    },
+
+    login: function login() {
+      var username = this.username;
+      var password = this.password;
+      if (username.length < 1) {
         uni.showToast({
           icon: 'none',
-          title: 'Your name musty be at least 5 characters' });
+          title: 'Your name is not valid' });
 
         return;
       }
-      if (this.password.length < 6) {
+      if (password.length < 1) {
         uni.showToast({
           icon: 'none',
-          title: 'Your password must be at least 6 characters' });
+          title: 'Your password is not valid' });
 
         return;
       }
+
+      var ServerUrl = this.$serverUrl;
+
       uni.request({
 
-        url: 'http://localhost:8080/servlat/login',
+        url: ServerUrl + '/login',
+        method: 'POST',
         data: {
-          username: this.account,
-          password: this.password },
-        success: function success() {
-          _this.toMain(_this.account);
-        }, fail: function fail() {
-          uni.showToast({
-            icon: 'none',
-            title: 'Incorrect username of password' });
+          username: username,
+          password: password },
+
+        success: function success(res) {
+          console.log(res.data);
+          var status = res.data.status;
+          if (status == 200) {
+            uni.showToast({
+              icon: 'none',
+              title: 'Welcome' });
+
+            uni.navigateTo({
+              url: '../classify/classify' });
+
+          } else if (status == 500) {
+            uni.showToast({
+              icon: 'none',
+              title: res.data.msg,
+              duration: 3000 });
+
+          }
 
         } });
 
-    },
-    toMain: function toMain(userName) {
-      this.login(userName);
-      /**
-                             * 强制登录时使用reLaunch方式跳转过来
-                             * 返回首页也使用reLaunch方式
-                             */
-      if (this.forcedLogin) {
-        uni.reLaunch({
-          url: '../index/index' });
+    } },
 
-      } else {
-        uni.navigateBack();
-      }
 
-    } } };exports.default = _default;
+  onLoad: function onLoad() {
+    uni.setNavigationBarTitle({
+      title: "Sign in" });
+
+
+  } };exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ "./node_modules/@dcloudio/uni-mp-weixin/dist/index.js")["default"]))
 
 /***/ }),
@@ -285,8 +252,8 @@ var render = function() {
                 {
                   name: "model",
                   rawName: "v-model",
-                  value: _vm.account,
-                  expression: "account"
+                  value: _vm.username,
+                  expression: "username"
                 }
               ],
               staticClass: "input",
@@ -295,13 +262,13 @@ var render = function() {
                 placeholder: "Username",
                 eventid: "03c73e1e-0"
               },
-              domProps: { value: _vm.account },
+              domProps: { value: _vm.username },
               on: {
                 input: function($event) {
                   if ($event.target.composing) {
                     return
                   }
-                  _vm.account = $event.target.value
+                  _vm.username = $event.target.value
                 }
               }
             })
@@ -336,28 +303,25 @@ var render = function() {
           ]),
           _c(
             "view",
-            { staticClass: "btn-row" },
+            { staticClass: "button-area" },
             [
               _c(
                 "button",
                 {
-                  staticClass: "primary",
-                  attrs: { type: "primary", eventid: "03c73e1e-2" },
-                  on: { tap: _vm.bindLogin }
+                  staticClass: "loginBtn",
+                  attrs: { type: "default", eventid: "03c73e1e-2" },
+                  on: { tap: _vm.login }
                 },
                 [_vm._v("Login")]
-              )
-            ],
-            1
-          ),
-          _c(
-            "view",
-            { staticClass: "action-row" },
-            [
+              ),
               _c(
-                "navigator",
-                { staticClass: "Reg", attrs: { url: "../register/register" } },
-                [_vm._v("Register")]
+                "button",
+                {
+                  staticClass: "registerBtn",
+                  attrs: { eventid: "03c73e1e-3" },
+                  on: { tap: _vm.Register }
+                },
+                [_vm._v("Sign up now!")]
               )
             ],
             1
@@ -376,7 +340,7 @@ var staticRenderFns = [
     return _c("view", { staticClass: "picture" }, [
       _c("image", {
         staticClass: "logo",
-        attrs: { src: "../../static/assets/logo3.png", mode: "" }
+        attrs: { src: "../../static/assets/logo.png", mode: "aspectFit" }
       })
     ])
   }
