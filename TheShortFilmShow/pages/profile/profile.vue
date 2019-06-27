@@ -39,25 +39,87 @@
 		data() {
 			return {
 				faceUrl: '../../static/icons/logo.png',
-				userInfo: {},
 			}
 		},
+
+		// 		onShow() {
+		// 			var that = this;
+		// 			var userInfo = that.getGlobalUserInfo();
+		// 
+		// 			console.log("onShow: that.userInfo.id=" + userInfo.id);
+		// 			console.log("onShow: that.userInfo.userToken=" + userInfo.userToken);
+		// 			uni.request({
+		// 				url: that.$serverUrl + '/user/query?userId=' + that.userInfo.id,
+		// 				method: 'POST',
+		// 				header: {
+		// 					'content-type': 'application/json',
+		// 					'userId': that.userInfo.id,
+		// 					'userToken': that.userInfo.userToken,
+		// 				},
+		// 				success: (res) => {
+		// 					console.log(res.data);
+		// 					var status = res.data.status;
+		// 					if (status == 200) {} else if (status == 502) {
+		// 						uni.showToast({
+		// 							icon: 'none',
+		// 							title: res.data.msg,
+		// 						});
+		// 					}
+		// 				}
+		// 			});
+		// 		},
+
 		onLoad() {
 			uni.setNavigationBarTitle({
 				title: "Profile"
 			});
 
 			var userInfo = this.getGlobalUserInfo();
-			if (userInfo == null) {
+			if (userInfo == null || userInfo == undefined || userInfo == "") {
+				uni.navigateTo({
+					url: '../login/login',
+				});
 				return;
-			} else {
-				this.userInfo = userInfo;
 			}
 			// console.log(userInfo)
+
+			uni.showLoading({
+				title: "Loading..."
+			});
+			var that = this;
+			uni.request({
+				url: that.$serverUrl + '/user/query?userId=' + userInfo.id,
+				method: 'POST',
+				header: {
+					'content-type': 'application/json',
+					'userId': userInfo.id,
+					'userToken': userInfo.userToken,
+				},
+				success: (res) => {
+					console.log(res.data);
+					var status = res.data.status;
+					if (status == 200) {
+						uni.hideLoading();
+					} else if (status == 502) {
+						uni.showToast({
+							icon: 'none',
+							title: res.data.msg,
+						});
+					}
+				}
+			});
+
 		},
 		methods: {
 			changeFaceImage: function() {
-				var userInfo = this.userInfo;
+				var userInfo = this.getGlobalUserInfo();
+				if (userInfo == null || userInfo == undefined || userInfo == "") {
+					uni.navigateTo({
+						url: '../login/login',
+					});
+					return;
+				}
+
 				var that = this;
 				uni.chooseImage({
 					count: 1, //默认9
@@ -65,18 +127,25 @@
 					sourceType: ['album'], //从相册选择
 					success: function(res) {
 						var tempFilePaths = res.tempFilePaths;
-						console.log(tempFilePaths);
 						uni.showLoading({
 							title: 'Uploading...'
 						})
 
+						console.log("uploading face... userId=" + userInfo.id);
 						uni.uploadFile({
 							url: that.$serverUrl + '/user/uploadFace?userId=' + userInfo.id,
 							filePath: tempFilePaths[0],
 							name: 'file',
+							header: {
+								'content-type': 'application/json',
+								'userId': userInfo.id,
+								'userToken': userInfo.userToken,
+							},
 							success: (res) => {
 								var data = JSON.parse(res.data);
-								console.log(data.data);
+								console.log("upload_res=");
+								console.log(data);
+
 								uni.hideLoading();
 								if (data.status == 200) {
 									uni.showToast({
@@ -85,7 +154,7 @@
 									})
 									var imageUrl = data.data;
 									that.faceUrl = that.$serverUrl + imageUrl;
-								} else if (data.status == 500) {
+								} else if (data.status == 502) {
 									uni.showToast({
 										title: data.msg
 									})
@@ -95,17 +164,25 @@
 					}
 				});
 			},
-			
-			goToLogin: function(){
+
+			goToLogin: function() {
 				uni.navigateTo({
 					url: '../login/login',
 				})
 			},
-			
+
 			logout: function() {
+				var userInfo = this.getGlobalUserInfo();
+				if (userInfo == null || userInfo == undefined || userInfo == "") {
+					uni.navigateTo({
+						url: '../login/login',
+					});
+					return;
+				}
+
 				var that = this;
 				uni.request({
-					url: that.$serverUrl + '/logout?userId' + this.userInfo.id,
+					url: that.$serverUrl + '/logout?userId' + userInfo.id,
 					method: 'POST',
 					header: {
 						'content-type': 'application/json'
@@ -119,6 +196,8 @@
 								title: 'Logout'
 							});
 							that.removeGlobalUserInfo();
+							console.log("logout: userInfo.id=" + that.getGlobalUserInfo.id);
+							console.log("logout: userInfo.userToken=" + that.getGlobalUserInfo.userToken);
 							uni.navigateTo({
 								url: '../login/login',
 							});

@@ -173,7 +173,11 @@ __webpack_require__.r(__webpack_exports__);
                 icon: 'success',
                 title: 'Welcome' });
 
+
               that.setGlobalUserInfo(res.data.data);
+              console.log("login: userInfo.id=" + that.getGlobalUserInfo().id);
+              console.log("login: userInfo.userToken=" + that.getGlobalUserInfo().userToken);
+
               that.goback();
             } else if (status == 500) {
               uni.showToast({

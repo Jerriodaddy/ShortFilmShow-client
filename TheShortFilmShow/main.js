@@ -12,13 +12,7 @@ Vue.prototype.setGlobalUserInfo = function(user) {
 
 Vue.prototype.getGlobalUserInfo = function() {
 	var value = uni.getStorageSync('userInfo');
-	if (value.length == 0) {
-		uni.navigateTo({
-			url: '/pages/login/login',
-		});
-	} else {
-		return value;
-	}
+	return value;
 }
 
 Vue.prototype.removeGlobalUserInfo = function() {

@@ -39,11 +39,12 @@ page {
 }
 
 /* 更改头像 */
-.change {
+
+/* .change {
 	color: white;
 	font-size: x-small;
-	margin-top: 20rpx;
-}
+	margin-top: 20upx;
+} */
 .information-card {
 	display: -webkit-box;
 	display: -webkit-flex;
