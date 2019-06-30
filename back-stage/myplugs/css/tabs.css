@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 ﻿@charset "utf-8";
 
 .tabs {
@@ -51,3 +52,58 @@
         height: 24px;
         line-height: 24px;
     }
+=======
+﻿@charset "utf-8";
+
+.tabs {
+    border: 1px solid #ddd;
+    text-align: left;
+}
+
+    .tabs > .hd {
+        height: 37px;
+        line-height: 30px;
+        background: #EFF3F8;
+        padding: 0px 20px;
+        border-bottom: 1px solid #ddd;
+        position: relative;
+    }
+
+        .tabs > .hd > ul {
+            float: left;
+            position: absolute;
+            left: 20px;
+            top: -1px;
+            height: 28px;
+            font-size: 14px;
+        }
+
+            .tabs > .hd > ul > li {
+                float: left;
+                padding: 0 25px;
+                cursor: pointer;
+                background: #7DB4D8;
+                margin-right: 3px;
+                margin-top: 5px;
+                color: white;
+                border: 1px solid #7DB4D8;
+                border-top: 3px solid #7DB4D8;
+            }
+
+                .tabs > .hd > ul > li.on {
+                    height: 30px;
+                    background: #fff;
+                    border-bottom: 2px solid #fff;
+                    color: #7DB4D8;
+                }
+
+    .tabs > .bd > div {
+        padding: 15px;
+        zoom: 1;
+    }
+
+    .tabs > .bd > div {
+        height: 24px;
+        line-height: 24px;
+    }
+>>>>>>> 3f9b8b4ea3381f93cd7a97d8466129efa33ed9ba

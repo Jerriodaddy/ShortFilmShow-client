@@ -50,30 +50,6 @@
 										</view>
 									</view>
 								</scroll-view>
-
-								<view class="oneline">
-									<view class="title">Default Column2</view>
-									<view class="filmsblock">
-										<view class="film">
-											<navigator url="../videoplay4/videoplay4">
-												<image class="filmpic" src="../../static/assets/Under the Parasol UTP_MASTER_GENERAL.jpg" mode=""></image>
-												<text class="filmname">Under the Parasol UTP_MASTER_GENERAL</text>
-											</navigator>
-										</view>
-										<view class="film">
-											<navigator url="../videoplay5/videoplay5">
-												<image class="filmpic" src="../../static/assets/STUDIO-A138.jpg" mode=""></image>
-												<text class="filmname">Stalled1-31-18</text>
-											</navigator>
-										</view>
-										<view class="film">
-											<navigator url="../videoplay6/videoplay6">
-												<image class="filmpic" src="../../static/assets/Tom%20Eastwood.jpg" mode=""></image>
-												<text class="filmname">The String 60 seconds</text>
-											</navigator>
-										</view>
-									</view>
-								</view>
 							</view>
 						</block>
 					</scroll-view>

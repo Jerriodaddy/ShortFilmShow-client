@@ -2,9 +2,15 @@
 	<view class="VP-back">
 		<view class="VP-screen">
 			<view class="screen">
-				<video class="play-video" id="Vendetta (ven·dét·ta)" :src="filmUrl"
-				 @error="videoErrorCallback" controls></video>
+				<video class="play-video" id="Vendetta (ven·dét·ta)" :src="filmUrl" @error="videoErrorCallback" controls></video>
 			</view>
+		</view>
+		<view class="data_box column_center">
+			<text class="data_box_text">Follow</text>
+			<view class="data_border"></view>
+			<text class="data_box_text">Fans</text>
+			<view class="data_border"></view>
+			<text class="data_box_text">Donate</text>
 		</view>
 		<view class="control_interface">
 			<scroll-view class="top-menu-view" scroll-x="true" :scroll-left="scrollLeft">
@@ -19,7 +25,7 @@
 					</view>
 				</block>
 			</scroll-view>
-			
+
 			<swiper :current="currentTab" class="swiper-box-list" duration="300" @change="swiperChange">
 				<block v-for="(swiperDate,index1) in swiperDateList" :key="index1">
 					<swiper-item>
@@ -73,9 +79,9 @@
 										</view>
 									</view>
 								</view>
-									<!-- 分割线 -->
+								<!-- 分割线 -->
 								<view class="border_line"></view>
-								
+
 								<view class="videocomment">
 									<view class="user_info">
 										<image class="comment_profile_pic" src="../../static/icons/logo.png"></image>
@@ -97,9 +103,9 @@
 										</view>
 									</view>
 								</view>
-									<!-- 分割线 -->
+								<!-- 分割线 -->
 								<view class="border_line"></view>
-								
+
 								<view class="videocomment">
 									<view class="user_info">
 										<image class="comment_profile_pic" src="../../static/icons/logo.png"></image>
@@ -113,7 +119,8 @@
 										</view>
 										<view class="content_box">
 											<text class="content_text">
-												I really like the actors in this film. For their really nice outlook and their suits. It's really cool. </text>
+												I really like the actors in this film. For their really nice outlook and their suits. It's really cool.
+											</text>
 											<view class="text_i"></view>
 										</view>
 										<view class="comment_show super_center">
@@ -121,7 +128,7 @@
 										</view>
 									</view>
 								</view>
-									<!-- 分割线 -->
+								<!-- 分割线 -->
 								<view class="border_line"></view>
 							</block>
 						</scroll-view>
@@ -167,10 +174,10 @@
 				// 								interval: 5000,
 				// 								duration: 500,
 				// 								circular: true
-				
+
 				// 电影数据
 				filmUrl: "",
-				film:{},
+				film: {},
 			}
 		},
 
@@ -195,7 +202,7 @@
 			uni.setNavigationBarTitle({
 				title: 'TheShortFilmShow'
 			});
-			
+
 			var film = JSON.parse(options.film);
 			this.filmUrl = this.$serverUrl + film.videoPath;
 			console.log(film);
@@ -263,24 +270,6 @@
 		justify-content: center; */
 	}
 
-	/* 通用属性 */
-	.super_center {
-		display: flex;
-		justify-content: center;
-		align-content: center;
-		align-items: center;
-	}
-
-	.hor_center {
-		display: flex;
-		align-items: center;
-	}
-
-	.row {
-		display: flex;
-		flex-direction: row;
-	}
-
 	/* 页面属性 */
 
 	.VP-back {
@@ -294,7 +283,7 @@
 	.V-intro {
 		height: 50%;
 	}
-	
+
 	/* 影片图片、名字、评分显示 */
 
 	.video-info-card {
@@ -339,11 +328,12 @@
 		color: black;
 		font-size: large;
 	}
-	
+
 	.actor-name {
 		color: white;
 		font-size: large;
 	}
+
 	/* ===========================电影信息 —— 结束 */
 
 	.com-write {
@@ -457,7 +447,7 @@
 		flex: 1;
 		width: 100%;
 		height: 60%;
-		background-color:black;
+		background-color: black;
 		/*调试背景色*/
 		border: 5upx solid #000000;
 		position: absolute;
@@ -648,9 +638,9 @@
 		height: 2upx;
 		border-bottom: 2upx solid #777777;
 	}
-	
+
 	/* 评论展开 */
-	.comment_show{
+	.comment_show {
 		width: 25%;
 		height: 15%;
 		position: absolute;
@@ -661,12 +651,31 @@
 		font-size: x-small;
 		color: white;
 	}
-	
-	.like_button{
+
+	.like_button {
 		height: 16%;
 		width: 16%;
 		position: fixed;
 		bottom: 4%;
 		right: 5%;
+	}
+
+	.data_box {
+		position: relative;
+		display: flex;
+		height: 80upx;
+		width: 100%;
+		justify-content: space-around;
+		background-color: white;
+	}
+
+	.data_box_text {
+		fontsize: small;
+	}
+
+	.data_border {
+		width: 2upx;
+		background-color: darkgray;
+		height: 90upx;
 	}
 </style>

@@ -256,6 +256,13 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+
+
+
+
+
+
+
 {
   data: function data() {
     return {
@@ -407,6 +414,7 @@ var render = function() {
         })
       ])
     ]),
+    _vm._m(0),
     _c(
       "view",
       { staticClass: "control_interface" },
@@ -675,14 +683,26 @@ var render = function() {
             )
           })
         ),
-        _vm._m(0)
+        _vm._m(1)
       ],
       1
     ),
-    _vm._m(1)
+    _vm._m(2)
   ])
 }
 var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("view", { staticClass: "data_box column_center" }, [
+      _c("text", { staticClass: "data_box_text" }, [_vm._v("Follow")]),
+      _c("view", { staticClass: "data_border" }),
+      _c("text", { staticClass: "data_box_text" }, [_vm._v("Fans")]),
+      _c("view", { staticClass: "data_border" }),
+      _c("text", { staticClass: "data_box_text" }, [_vm._v("Donate")])
+    ])
+  },
   function() {
     var _vm = this
     var _h = _vm.$createElement

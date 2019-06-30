@@ -1,19 +1,16 @@
 {
   "pages": [
     "pages/index/index",
-    "pages/hot/hot",
-    "pages/login/login",
-    "pages/profile/profile",
     "pages/videoplay/videoplay",
-    "pages/videoplay2/videoplay2",
-    "pages/videoplay3/videoplay3",
-    "pages/videoplay4/videoplay4",
-    "pages/videoplay5/videoplay5",
-    "pages/videoplay6/videoplay6",
+    "pages/hot/hot",
+    "pages/profile/profile",
+    "pages/login/login",
     "pages/register/register",
     "pages/Swiper-detail/Swiper-detail",
     "pages/videosearch/videosearch",
-    "pages/open/open"
+    "pages/open/open",
+    "pages/upload/upload",
+    "pages/profileinfo/profileinfo"
   ],
   "subPackages": [],
   "window": {

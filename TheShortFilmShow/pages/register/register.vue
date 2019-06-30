@@ -74,6 +74,7 @@
 						header: {
 							'content-type': 'application/json'
 						},
+
 						success: (res) => {
 							console.log(res.data);
 							var status = res.data.status;
@@ -94,6 +95,13 @@
 									title: res.data.msg,
 								});
 							}
+						},
+						fail: (res) => {
+							console.log(res.data);
+							uni.showToast({
+								icon: 'none',
+								title: res.data.msg,
+							});
 						}
 					});
 				}

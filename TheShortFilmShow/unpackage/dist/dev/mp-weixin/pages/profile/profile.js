@@ -150,43 +150,37 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+
+
+
+
+
+
+
+
 {
   data: function data() {
     return {
-      faceUrl: '../../static/icons/logo.png' };
+      faceUrl: '../../static/icons/profilePic.png',
+      src: '',
+      history: 'Watch history' };
 
   },
 
-  // 		onShow() {
-  // 			var that = this;
-  // 			var userInfo = that.getGlobalUserInfo();
-  // 
-  // 			console.log("onShow: that.userInfo.id=" + userInfo.id);
-  // 			console.log("onShow: that.userInfo.userToken=" + userInfo.userToken);
-  // 			uni.request({
-  // 				url: that.$serverUrl + '/user/query?userId=' + that.userInfo.id,
-  // 				method: 'POST',
-  // 				header: {
-  // 					'content-type': 'application/json',
-  // 					'userId': that.userInfo.id,
-  // 					'userToken': that.userInfo.userToken,
-  // 				},
-  // 				success: (res) => {
-  // 					console.log(res.data);
-  // 					var status = res.data.status;
-  // 					if (status == 200) {} else if (status == 502) {
-  // 						uni.showToast({
-  // 							icon: 'none',
-  // 							title: res.data.msg,
-  // 						});
-  // 					}
-  // 				}
-  // 			});
-  // 		},
-
-  onLoad: function onLoad() {
+  onLoad: function onLoad(option) {
     uni.setNavigationBarTitle({
       title: "Profile" });
+
+
+    // let {
+    // 	avatar
+    // } = option;
+    // if (avatar) {
+    // 	this.src = avatar;
+    // }
+
+    uni.showLoading({
+      title: 'Loding...' });
 
 
     var userInfo = this.getGlobalUserInfo();
@@ -196,37 +190,12 @@ __webpack_require__.r(__webpack_exports__);
 
       return;
     }
-    // console.log(userInfo)
 
-    uni.showLoading({
-      title: "Loading..." });
-
-    var that = this;
-    uni.request({
-      url: that.$serverUrl + '/user/query?userId=' + userInfo.id,
-      method: 'POST',
-      header: {
-        'content-type': 'application/json',
-        'userId': userInfo.id,
-        'userToken': userInfo.userToken },
-
-      success: function success(res) {
-        console.log(res.data);
-        var status = res.data.status;
-        if (status == 200) {
-          uni.hideLoading();
-        } else if (status == 502) {
-          uni.showToast({
-            icon: 'none',
-            title: res.data.msg });
-
-        }
-      } });
-
-
+    console.log(userInfo);
+    this.queryUserInfo(userInfo);
   },
   methods: {
-    changeFaceImage: function changeFaceImage() {
+    upload: function upload() {
       var userInfo = this.getGlobalUserInfo();
       if (userInfo == null || userInfo == undefined || userInfo == "") {
         uni.navigateTo({
@@ -235,57 +204,21 @@ __webpack_require__.r(__webpack_exports__);
         return;
       }
 
-      var that = this;
       uni.chooseImage({
-        count: 1, //默认9
-        sizeType: ['compressed'], //可以指定是原图还是压缩图，默认二者都有
-        sourceType: ['album'], //从相册选择
+        count: 1, // 默认9
+        sizeType: ['compressed'], // 可以指定是原图还是压缩图，默认二者都有
+        sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
         success: function success(res) {
-          var tempFilePaths = res.tempFilePaths;
-          uni.showLoading({
-            title: 'Uploading...' });
-
-
-          console.log("uploading face... userId=" + userInfo.id);
-          uni.uploadFile({
-            url: that.$serverUrl + '/user/uploadFace?userId=' + userInfo.id,
-            filePath: tempFilePaths[0],
-            name: 'file',
-            header: {
-              'content-type': 'application/json',
-              'userId': userInfo.id,
-              'userToken': userInfo.userToken },
-
-            success: function success(res) {
-              var data = JSON.parse(res.data);
-              console.log("upload_res=");
-              console.log(data);
-
-              uni.hideLoading();
-              if (data.status == 200) {
-                uni.showToast({
-                  title: 'Success!',
-                  icon: "success" });
-
-                var imageUrl = data.data;
-                that.faceUrl = that.$serverUrl + imageUrl;
-              } else if (data.status == 502) {
-                uni.showToast({
-                  title: data.msg });
-
-              }
-            } });
+          var src = res.tempFilePaths[0];
+          console.log("src=" + src);
+          uni.redirectTo({
+            url: '../upload/upload?src=' + src });
 
         } });
 
     },
 
-    goToLogin: function goToLogin() {
-      uni.navigateTo({
-        url: '../login/login' });
-
-    },
-
+    // 用户注销，清楚用户缓存
     logout: function logout() {
       var userInfo = this.getGlobalUserInfo();
       if (userInfo == null || userInfo == undefined || userInfo == "") {
@@ -294,7 +227,6 @@ __webpack_require__.r(__webpack_exports__);
 
         return;
       }
-
       var that = this;
       uni.request({
         url: that.$serverUrl + '/logout?userId' + userInfo.id,
@@ -324,7 +256,87 @@ __webpack_require__.r(__webpack_exports__);
           }
         } });
 
-    } } };exports.default = _default;
+    },
+
+    queryUserInfo: function queryUserInfo(userInfo) {
+      var that = this;
+      uni.request({
+        url: that.$serverUrl + '/user/query?userId=' + userInfo.id,
+        method: 'POST',
+        header: {
+          'content-type': 'application/json',
+          'userId': userInfo.id,
+          'userToken': userInfo.userToken },
+
+        success: function success(res) {
+          console.log(res.data);
+          var status = res.data.status;
+          if (status == 200) {
+            uni.hideLoading();
+            // 赋值到当前页面
+            var userInfo = res.data.data;
+            if (userInfo.faceImage != null) {
+              that.faceUrl = that.$serverUrl + userInfo.faceImage;
+            }
+            // 加上user的其他属性
+
+          } else if (status == 502) {
+            uni.showToast({
+              icon: 'none',
+              title: res.data.msg });
+
+          }
+        } });
+
+    }
+
+    // 			upload: function() {
+    // 				var userInfo = this.getGlobalUserInfo();
+    // 				if (userInfo == null) {
+    // 					return;
+    // 				}
+    // 				var that = this;
+    // 				uni.chooseImage({
+    // 					count: 1, //默认9
+    // 					sizeType: ['compressed'], //可以指定是原图还是压缩图，默认二者都有
+    // 					sourceType: ['album'], //从相册选择
+    // 					success: function(res) {
+    // 						var tempFilePaths = res.tempFilePaths;
+    // 						console.log(tempFilePaths);
+    // 						uni.showLoading({
+    // 							title: 'Uploading...'
+    // 						});
+    // 						// 以下三行用于测试，
+    // 						uni.redirectTo({
+    // 							url:'../upload/upload?src=' + src
+    // 						});
+    // 
+    // 						uni.uploadFile({
+    // 							url: that.$serverUrl + '/user/uploadFace?userId=' + userInfo.id,
+    // 							filePath: tempFilePaths[0],
+    // 							name: 'file',
+    // 							success: (res) => {
+    // 								var data = JSON.parse(res.data);
+    // 								console.log(data.data);
+    // 								uni.hideLoading();
+    // 								if (data.status == 200) {
+    // 									uni.showToast({
+    // 										title: 'Success!',
+    // 										icon: "success"
+    // 									})
+    // 									var imageUrl = data.data;
+    // 									that.faceUrl = that.$serverUrl + imageUrl;
+    // 								} else if (data.status == 500) {
+    // 									uni.showToast({
+    // 										title: data.msg
+    // 									})
+    // 								}
+    // 							}
+    // 						});
+    // 					}
+    // 				});
+    // 			}
+  } };exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ "./node_modules/@dcloudio/uni-mp-weixin/dist/index.js")["default"]))
 
 /***/ }),
@@ -355,89 +367,84 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("view", { staticClass: "background" }, [
-    _c(
-      "view",
-      { staticClass: "picbox" },
-      [
-        _c("image", {
-          staticClass: "profilepic",
-          attrs: { src: _vm.faceUrl, eventid: "fa6a801e-0" },
-          on: { click: _vm.changeFaceImage }
-        }),
+  return _c(
+    "view",
+    { staticClass: "background" },
+    [
+      _c("view", { staticClass: "picbox" }, [
         _c(
-          "button",
+          "view",
           {
-            attrs: { type: "primary", eventid: "fa6a801e-1" },
-            on: { click: _vm.goToLogin }
+            attrs: { type: "primary", eventid: "fa6a801e-0" },
+            on: { tap: _vm.upload }
           },
-          [_vm._v("login")]
+          [
+            _c("image", {
+              staticClass: "profilepic",
+              attrs: { src: _vm.faceUrl }
+            })
+          ]
         ),
-        _c(
-          "button",
-          {
-            attrs: { type: "primary", eventid: "fa6a801e-2" },
-            on: { click: _vm.logout }
-          },
-          [_vm._v("logout")]
-        )
-      ],
-      1
-    ),
-    _vm._m(0),
-    _vm._m(1),
-    _c(
-      "view",
-      { staticClass: "film-upload" },
-      [
-        _c("navigator", { attrs: { url: "../videosearch/videosearch" } }, [
-          _c("text", { staticClass: "film-upload-text" }, [
-            _vm._v("Film upload")
+        _c("view", {}, [_vm._v("Guetta")])
+      ]),
+      _vm._m(0),
+      _c("view", { staticClass: "container_profile column hor_center" }, [
+        _c("view", { staticClass: "drawer column_center" }, [
+          _c("image", {
+            staticClass: "icon-proflie",
+            attrs: { src: "../../static/icons/history.png", mode: "" }
+          }),
+          _c("view", { staticClass: "profile_title column_center" }, [
+            _c("text", { staticClass: "profiel_title_text" }, [
+              _vm._v(_vm._s(_vm.history))
+            ])
           ])
+        ]),
+        _c("view", { staticClass: "drawer column_center" }, [
+          _c("image", {
+            staticClass: "icon-proflie",
+            attrs: { src: "../../static/icons/history.png", mode: "" }
+          }),
+          _c(
+            "view",
+            { staticClass: "profile_title column_center" },
+            [
+              _c(
+                "navigator",
+                {
+                  staticClass: "profiel_title_text",
+                  attrs: {
+                    url: "../profileinfo/profileinfo",
+                    "hover-class": "navigator-hover"
+                  }
+                },
+                [_vm._v("Edit\n\t\t\t\t\tinformation")]
+              )
+            ],
+            1
+          )
         ])
-      ],
-      1
-    )
-  ])
+      ]),
+      _c(
+        "button",
+        { attrs: { eventid: "fa6a801e-1" }, on: { click: _vm.logout } },
+        [_vm._v("logout")]
+      )
+    ],
+    1
+  )
 }
 var staticRenderFns = [
   function() {
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("view", { staticClass: "information-card" }, [
-      _c("view", { staticClass: "title-line" }, [
-        _c("text", { staticClass: "info-title" }, [_vm._v("Nicke name")]),
-        _c("text", { staticClass: "info-title" }, [_vm._v("ID")]),
-        _c("text", { staticClass: "info-title" }, [_vm._v("Gender")]),
-        _c("text", { staticClass: "info-title" }, [_vm._v("Birthday")]),
-        _c("text", { staticClass: "info-title" }, [_vm._v("Prefer")])
-      ]),
-      _c("view", { staticClass: "content-line" }, [
-        _c("text", { staticClass: "info-content conteng-space" }, [
-          _vm._v("content")
-        ]),
-        _c("text", { staticClass: "info-content conteng-space" }, [
-          _vm._v("content")
-        ]),
-        _c("text", { staticClass: "info-content conteng-space" }, [
-          _vm._v("content")
-        ]),
-        _c("text", { staticClass: "info-content conteng-space" }, [
-          _vm._v("content")
-        ]),
-        _c("text", { staticClass: "info-content conteng-space" }, [
-          _vm._v("content")
-        ])
-      ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("view", { staticClass: "edit-button" }, [
-      _c("text", { staticClass: "edit-text" }, [_vm._v("Edit")])
+    return _c("view", { staticClass: "data_box column_center" }, [
+      _c("text", { staticClass: "data_box_text" }, [_vm._v("Follow")]),
+      _c("view", { staticClass: "data_border" }),
+      _c("text", { staticClass: "data_box_text" }, [_vm._v("Fans")]),
+      _c("view", { staticClass: "data_border" }),
+      _c("text", { staticClass: "data_box_text" }, [_vm._v("Donate")])
     ])
   }
 ]

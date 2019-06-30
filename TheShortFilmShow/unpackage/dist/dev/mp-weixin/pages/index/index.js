@@ -175,30 +175,6 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 {
   data: function data() {
     return {
@@ -639,108 +615,7 @@ var render = function() {
                                     })
                                   )
                                 ]
-                              ),
-                              _c("view", { staticClass: "oneline" }, [
-                                _c("view", { staticClass: "title" }, [
-                                  _vm._v("Default Column2")
-                                ]),
-                                _c("view", { staticClass: "filmsblock" }, [
-                                  _c(
-                                    "view",
-                                    { staticClass: "film" },
-                                    [
-                                      _c(
-                                        "navigator",
-                                        {
-                                          attrs: {
-                                            url: "../videoplay4/videoplay4"
-                                          }
-                                        },
-                                        [
-                                          _c("image", {
-                                            staticClass: "filmpic",
-                                            attrs: {
-                                              src:
-                                                "../../static/assets/Under the Parasol UTP_MASTER_GENERAL.jpg",
-                                              mode: ""
-                                            }
-                                          }),
-                                          _c(
-                                            "text",
-                                            { staticClass: "filmname" },
-                                            [
-                                              _vm._v(
-                                                "Under the Parasol UTP_MASTER_GENERAL"
-                                              )
-                                            ]
-                                          )
-                                        ]
-                                      )
-                                    ],
-                                    1
-                                  ),
-                                  _c(
-                                    "view",
-                                    { staticClass: "film" },
-                                    [
-                                      _c(
-                                        "navigator",
-                                        {
-                                          attrs: {
-                                            url: "../videoplay5/videoplay5"
-                                          }
-                                        },
-                                        [
-                                          _c("image", {
-                                            staticClass: "filmpic",
-                                            attrs: {
-                                              src:
-                                                "../../static/assets/STUDIO-A138.jpg",
-                                              mode: ""
-                                            }
-                                          }),
-                                          _c(
-                                            "text",
-                                            { staticClass: "filmname" },
-                                            [_vm._v("Stalled1-31-18")]
-                                          )
-                                        ]
-                                      )
-                                    ],
-                                    1
-                                  ),
-                                  _c(
-                                    "view",
-                                    { staticClass: "film" },
-                                    [
-                                      _c(
-                                        "navigator",
-                                        {
-                                          attrs: {
-                                            url: "../videoplay6/videoplay6"
-                                          }
-                                        },
-                                        [
-                                          _c("image", {
-                                            staticClass: "filmpic",
-                                            attrs: {
-                                              src:
-                                                "../../static/assets/Tom%20Eastwood.jpg",
-                                              mode: ""
-                                            }
-                                          }),
-                                          _c(
-                                            "text",
-                                            { staticClass: "filmname" },
-                                            [_vm._v("The String 60 seconds")]
-                                          )
-                                        ]
-                                      )
-                                    ],
-                                    1
-                                  )
-                                ])
-                              ])
+                              )
                             ],
                             1
                           )

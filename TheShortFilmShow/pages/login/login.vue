@@ -33,6 +33,13 @@
 		},
 
 		methods: {
+
+			register() {
+				uni.navigateTo({
+					url: '../register/register',
+				})
+			},
+
 			login(res) {
 				var formObject = res.detail.value;
 				var username = formObject.username;
@@ -42,9 +49,11 @@
 						title: 'Username or password can not be null',
 					});
 				} else {
+					var ServerUrl = this.$serverUrl;
+
 					var that = this;
 					uni.request({
-						url: that.$serverUrl + '/login',
+						url: ServerUrl + '/login',
 						method: 'POST',
 						data: {
 							username: username,
@@ -58,11 +67,7 @@
 									icon: 'success',
 									title: 'Welcome'
 								});
-								
 								that.setGlobalUserInfo(res.data.data);
-								console.log("login: userInfo.id=" + that.getGlobalUserInfo().id);
-								console.log("login: userInfo.userToken=" + that.getGlobalUserInfo().userToken);
-								
 								that.goback();
 							} else if (status == 500) {
 								uni.showToast({
@@ -75,19 +80,14 @@
 					});
 				}
 			},
-
-			register() {
-				uni.navigateTo({
-					url: '../register/register',
-				})
-			},
-
+			
 			goback() {
 				uni.navigateBack({
 					delta: 1
 				})
 			}
 		},
+
 
 
 	}

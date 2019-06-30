@@ -148,6 +148,13 @@ __webpack_require__.r(__webpack_exports__);
   },
 
   methods: {
+
+    register: function register() {
+      uni.navigateTo({
+        url: '../register/register' });
+
+    },
+
     login: function login(res) {
       var formObject = res.detail.value;
       var username = formObject.username;
@@ -157,9 +164,11 @@ __webpack_require__.r(__webpack_exports__);
           title: 'Username or password can not be null' });
 
       } else {
+        var ServerUrl = this.$serverUrl;
+
         var that = this;
         uni.request({
-          url: that.$serverUrl + '/login',
+          url: ServerUrl + '/login',
           method: 'POST',
           data: {
             username: username,
@@ -173,11 +182,7 @@ __webpack_require__.r(__webpack_exports__);
                 icon: 'success',
                 title: 'Welcome' });
 
-
               that.setGlobalUserInfo(res.data.data);
-              console.log("login: userInfo.id=" + that.getGlobalUserInfo().id);
-              console.log("login: userInfo.userToken=" + that.getGlobalUserInfo().userToken);
-
               that.goback();
             } else if (status == 500) {
               uni.showToast({
@@ -189,12 +194,6 @@ __webpack_require__.r(__webpack_exports__);
           } });
 
       }
-    },
-
-    register: function register() {
-      uni.navigateTo({
-        url: '../register/register' });
-
     },
 
     goback: function goback() {
