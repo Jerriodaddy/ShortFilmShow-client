@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 ﻿@charset "utf-8";
 @import url("calendar.css");
 @import url("dialog.css");
@@ -7,4 +8,15 @@
 @import url("pageRecord.css");
 @import url("table.css");
 @import url("tabs.css");
+=======
+﻿@charset "utf-8";
+@import url("calendar.css");
+@import url("dialog.css");
+@import url("form.css");
+@import url("layout.css");
+@import url("menu.css");
+@import url("pageRecord.css");
+@import url("table.css");
+@import url("tabs.css");
+>>>>>>> 3f9b8b4ea3381f93cd7a97d8466129efa33ed9ba
 @import url("default.css");
