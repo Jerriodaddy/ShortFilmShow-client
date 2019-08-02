@@ -101,7 +101,7 @@
 								'userToken': userInfo.userToken,
 							},
 							success: (res) => {
-								// console.log(res)
+								console.log(res)
 								// console.log("id=" + userInfo.id);
 								// console.log("Token=" + userInfo.userToken);
 								var data = JSON.parse(res.data);
@@ -114,7 +114,7 @@
 									})
 									var imageUrl = data.data;
 									that.faceUrl = that.$serverUrl + imageUrl;
-								} else if (data.status == 502) {
+								} else {
 									uni.showToast({
 										title: data.msg
 									})

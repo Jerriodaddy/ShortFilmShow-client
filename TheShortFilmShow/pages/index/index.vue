@@ -205,7 +205,9 @@
 
 						var videoList = that.videoList;
 						var newVideoList = res.data.data.rows;
-
+						
+						console.log(newVideoList);
+						
 						that.videoList = videoList.concat(newVideoList);
 						that.page = page;
 						that.totalPage = res.data.data.total;

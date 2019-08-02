@@ -36,8 +36,7 @@ page {
 .profilepic {
 	width: 120rpx;
 	height: 120rpx;
-	-webkit-border-radius: 60rpx;
-	        border-radius: 60rpx;
+	border-radius: 60rpx;
 }
 
 /* 更改头像 */
@@ -60,7 +59,6 @@ page {
 	    -ms-flex-pack: distribute;
 	        justify-content: space-around;
 	background: -webkit-gradient(linear, left top, right top, from(orange), color-stop(red), to(orange));
-	background: -webkit-linear-gradient(left, orange, red, orange);
 	background: -o-linear-gradient(left, orange, red, orange);
 	background: linear-gradient(to right, orange, red, orange);
 }

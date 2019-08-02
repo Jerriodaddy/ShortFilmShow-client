@@ -91,8 +91,7 @@ page {
 .com-write {
 		height: 10%;
 		border: 1rpx solid black;
-		-webkit-border-radius: 2px;
-		        border-radius: 2px;
+		border-radius: 2px;
 		background-color: #F8F8FF;
 }
 .V-com-area {
@@ -411,8 +410,7 @@ page {
 		height: 80rpx;
 		width: 80rpx;
 		border: 2rpx;
-		-webkit-border-radius: 150rpx;
-		        border-radius: 150rpx;
+		border-radius: 150rpx;
 }
 .comment_text {
 		display: inline-block;
