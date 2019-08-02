@@ -1,17 +1,28 @@
 <template>
 	<view class="VP-back">
+		<!-- 视频播放器，此处代码问题较多，缺少 CSS 属性，年代久远，不要乱动 -->
 		<view class="VP-screen">
 			<view class="screen">
 				<video class="play-video" id="Vendetta (ven·dét·ta)" :src="filmUrl" @error="videoErrorCallback" controls></video>
 			</view>
 		</view>
-		<view class="data_box column_center">
-			<text class="data_box_text">Follow</text>
-			<view class="data_border"></view>
-			<text class="data_box_text">Fans</text>
-			<view class="data_border"></view>
-			<text class="data_box_text">Donate</text>
+
+		<!-- 电影制作人信息栏 -->
+		<view class="filmmaker_title column_center">
+			<text class="filmmaker_title_text">Director</text>
 		</view>
+		<view class="data_box column_center">
+			<image src="../../static/icons/logo.png" class="filmmaker-pic"></image>
+			<view class="filmmaker-name column_center">
+				<text class="filmmaker-name-text">Guetta Xia</text>
+			</view>
+			<!-- 前面两项，总左边距为46% -->
+			<!-- 			<button size="mini" plain="true" hover-class="button-hover" type="primary" class="msg_button">Message</button>
+ -->
+			<button size="mini" plain="true" hover-class="button-hover" type="primary" class="follow_button">Follow</button>
+		</view>
+
+		<!-- 控制台，但 control_interface 属性为空 -->
 		<view class="control_interface">
 			<scroll-view class="top-menu-view" scroll-x="true" :scroll-left="scrollLeft">
 				<block v-for="(menuTabs,index) in menuTabs" :key="index">
@@ -71,7 +82,7 @@
 										</view>
 										<view class="content_box">
 											<text class="content_text">
-												The magical war has gradually entered a climax. </text>
+												The magical war has gradually entered a climax. 3212312321321312313213131232131231231313123</text>
 											<view class="text_i"></view>
 										</view>
 										<view class="comment_show super_center">
@@ -135,12 +146,16 @@
 					</swiper-item>
 				</block>
 			</swiper>
+
+			<!-- 评论表单，年代久远，研究版不做修改 -->
 			<view class="V-com-area">
 				<view class="com-write">
 					<input name="comment" class="input" placeholder="Write some comment?" />
 				</view>
 			</view>
 		</view>
+
+		<!-- like button，暂时未编辑效果 -->
 		<view class="">
 			<image class="like_button" src="../../static/icons/like2.png" mode="aspectFit"></image>
 		</view>
@@ -263,7 +278,7 @@
 <style>
 	page {
 		width: 100%;
-		height: 200%;
+		height: 100%;
 		/* display: flex;
 		flex-wrap: wrap;
 		align-items: flex-start;
@@ -277,11 +292,17 @@
 	}
 
 	.play-video {
+		height: 380upx;
 		width: 100%;
 	}
 
 	.V-intro {
 		height: 50%;
+	}
+
+	.screen {
+		width: 100%;
+		height: 380upx;
 	}
 
 	/* 影片图片、名字、评分显示 */
@@ -520,6 +541,35 @@
 	}
 
 	/* 评论属性 */
+	.content_box {
+		margin-left: 20upx;
+		margin-right: 40upx;
+		margin-top: 50upx;
+		margin-bottom: 20upx;
+		position: absolute;
+		height: 60%;
+		width: 95%;
+
+	}
+
+	.text_i {
+		display: inline-block;
+		width: 100%;
+	}
+
+	.content_text {
+		/* display: inline-block; */
+		width: 100%;
+		/* text-align: justify; */
+		font-size: medium;
+		color: white;
+		/* 这里用 webkit 暂时实现隐藏过长字符 */
+		overflow: hidden;
+		text-overflow: ellipsis;
+		display: -webkit-box;
+		-webkit-line-clamp: 2;
+		-webkit-box-orient: vertical;
+	}
 
 	.new_comment {
 		width: 100%;
@@ -562,30 +612,6 @@
 		align-content: center;
 		align-items: center;
 		justify-content: center;
-	}
-
-	.content_box {
-		margin-left: 20upx;
-		margin-right: 40upx;
-		margin-top: 50upx;
-		margin-bottom: 20upx;
-		position: absolute;
-		height: 60%;
-		width: 95%;
-
-	}
-
-	.text_i {
-		display: inline-block;
-		width: 100%;
-	}
-
-	.content_text {
-		display: inline-block;
-		width: 100%;
-		text-align: justify;
-		font-size: medium;
-		color: white;
 	}
 
 	.user_info_name_text {
@@ -663,9 +689,8 @@
 	.data_box {
 		position: relative;
 		display: flex;
-		height: 80upx;
+		height: 90upx;
 		width: 100%;
-		justify-content: space-around;
 		background-color: white;
 	}
 
@@ -677,5 +702,52 @@
 		width: 2upx;
 		background-color: darkgray;
 		height: 90upx;
+	}
+
+	/* 最新更新，导演卡片 */
+	.filmmaker_title {
+		/* background-color: white; */
+		background: linear-gradient(to right, #666666, white);
+		height: 48upx;
+		width: 100%;
+
+	}
+
+	.filmmaker_title_text {
+		position: absolute;
+		margin-left: 4%;
+		color: black;
+		font-size: large;
+		font-style: oblique;
+		font-weight: 900;
+	}
+
+	.filmmaker-pic {
+		position: absolute;
+		border: 2upx solid #A9A9A9;
+		border-radius: 100upx;
+		height: 65upx;
+		width: 65upx;
+		margin-left: 4%;
+	}
+
+	.filmmaker-name {
+		width: 30%;
+		position: absolute;
+		margin-left: 16%;
+	}
+
+	.filmmaker-name-text {
+		font-size: medium;
+	}
+
+	.msg_button {
+		margin-left: 46%;
+		position: absolute;
+	}
+
+	.follow_button {
+		position: absolute;
+		margin-left: 75%;
 	}
 </style>

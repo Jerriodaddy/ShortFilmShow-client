@@ -1,8 +1,9 @@
 {
   "pages": [
     "pages/index/index",
+    "pages/watchhistory/watchhistory",
+    "pages/filmlibrary/filmlibrary",
     "pages/videoplay/videoplay",
-    "pages/hot/hot",
     "pages/profile/profile",
     "pages/login/login",
     "pages/register/register",
@@ -32,8 +33,8 @@
         "selectedIconPath": "static/icons/home.png"
       },
       {
-        "pagePath": "pages/hot/hot",
-        "text": "Hot",
+        "pagePath": "pages/filmlibrary/filmlibrary",
+        "text": "Filmlibrary",
         "iconPath": "static/icons/boxes.png",
         "selectedIconPath": "static/icons/boxes.png"
       },

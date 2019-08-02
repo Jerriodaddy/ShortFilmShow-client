@@ -1,9 +1,9 @@
 (global["webpackJsonp"] = global["webpackJsonp"] || []).push([["common/vendor"],{
 
-/***/ "../../../../../../Users/jerrio/Desktop/JumboX/TheShortFilmShow/short-film-show-client/TheShortFilmShow/pages.json":
-/*!********************************************************************************************************!*\
-  !*** /Users/jerrio/Desktop/JumboX/TheShortFilmShow/short-film-show-client/TheShortFilmShow/pages.json ***!
-  \********************************************************************************************************/
+/***/ "../../../../../../动态SFS/short-film-show-client/TheShortFilmShow/pages.json":
+/*!********************************************************************************************!*\
+  !*** C:/Users/Guetta Xia/Desktop/动态SFS/short-film-show-client/TheShortFilmShow/pages.json ***!
+  \********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 

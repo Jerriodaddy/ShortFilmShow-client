@@ -8,7 +8,7 @@
 			</view>
 			<!-- <text class="change">change picture</text> -->
 			<!-- 			<button type="primary" @click="changeFaceImage" @tap="upload">change picture</button>-->
-			<view class="">Guetta</view>
+			<view class="">{{name}}</view>
 		</view>
 		<!-- 数据框 pink-->
 		<view class="data_box column_center">
@@ -25,7 +25,7 @@
 			<view class="drawer column_center">
 				<image src="../../static/icons/history.png" mode="" class="icon-proflie"></image>
 				<view class="profile_title column_center">
-					<text class="profiel_title_text">{{history}}</text>
+					<navigator url="../watchhistory/watchhistory" hover-class="navigator-hover" class="profiel_title_text">{{history}}</navigator>
 				</view>
 			</view>
 
@@ -48,7 +48,8 @@
 			return {
 				faceUrl: '../../static/icons/profilePic.png',
 				src: '',
-				history: 'Watch history'
+				history: 'Watch history',
+				name: 'Please login'
 			}
 		},
 
@@ -67,6 +68,10 @@
 			uni.showLoading({
 				title: 'Loding...',
 			});
+			
+			setTimeout(function () {
+			uni.hideLoading();
+			}, 5000);
 
 			var userInfo = this.getGlobalUserInfo();
 			if (userInfo == null || userInfo == undefined || userInfo == "") {
@@ -103,7 +108,7 @@
 				});
 			},
 
-			// 用户注销，清楚用户缓存
+			// 用户注销，清除用户缓存
 			logout: function() {
 				var userInfo = this.getGlobalUserInfo();
 				if (userInfo == null || userInfo == undefined || userInfo == "") {
