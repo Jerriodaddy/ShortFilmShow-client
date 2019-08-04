@@ -1,30 +1,6 @@
-(global["webpackJsonp"] = global["webpackJsonp"] || []).push([["common/vendor"],{
-
-/***/ "../../../../../../Users/jerrio/Desktop/JumboX/TheShortFilmShow/short-film-show-client/TheShortFilmShow/pages.json":
-/*!********************************************************************************************************!*\
-  !*** /Users/jerrio/Desktop/JumboX/TheShortFilmShow/short-film-show-client/TheShortFilmShow/pages.json ***!
-  \********************************************************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-/***/ }),
-
-/***/ "./node_modules/@babel/runtime/regenerator/index.js":
-/*!**********************************************************!*\
-  !*** ./node_modules/@babel/runtime/regenerator/index.js ***!
-  \**********************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-module.exports = __webpack_require__(/*! regenerator-runtime */ "./node_modules/regenerator-runtime/runtime-module.js");
-
-
-/***/ }),
-
-/***/ "./node_modules/@dcloudio/uni-mp-weixin/dist/index.js":
+(global["webpackJsonp"] = global["webpackJsonp"] || []).push([["common/vendor"],[
+/* 0 */,
+/* 1 */
 /*!************************************************************!*\
   !*** ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js ***!
   \************************************************************/
@@ -32,7 +8,7 @@ module.exports = __webpack_require__(/*! regenerator-runtime */ "./node_modules/
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });exports.createApp = createApp;exports.createPage = createPage;exports.createComponent = createComponent;exports.default = void 0;var _vue = _interopRequireDefault(__webpack_require__(/*! vue */ "./node_modules/@dcloudio/vue-cli-plugin-uni/packages/mpvue/index.js"));function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}function _slicedToArray(arr, i) {return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _nonIterableRest();}function _nonIterableRest() {throw new TypeError("Invalid attempt to destructure non-iterable instance");}function _iterableToArrayLimit(arr, i) {var _arr = [];var _n = true;var _d = false;var _e = undefined;try {for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) {_arr.push(_s.value);if (i && _arr.length === i) break;}} catch (err) {_d = true;_e = err;} finally {try {if (!_n && _i["return"] != null) _i["return"]();} finally {if (_d) throw _e;}}return _arr;}function _arrayWithHoles(arr) {if (Array.isArray(arr)) return arr;}function _defineProperty(obj, key, value) {if (key in obj) {Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true });} else {obj[key] = value;}return obj;}
+Object.defineProperty(exports, "__esModule", { value: true });exports.createApp = createApp;exports.createPage = createPage;exports.createComponent = createComponent;exports.default = void 0;var _vue = _interopRequireDefault(__webpack_require__(/*! vue */ 2));function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}function _slicedToArray(arr, i) {return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _nonIterableRest();}function _nonIterableRest() {throw new TypeError("Invalid attempt to destructure non-iterable instance");}function _iterableToArrayLimit(arr, i) {var _arr = [];var _n = true;var _d = false;var _e = undefined;try {for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) {_arr.push(_s.value);if (i && _arr.length === i) break;}} catch (err) {_d = true;_e = err;} finally {try {if (!_n && _i["return"] != null) _i["return"]();} finally {if (_d) throw _e;}}return _arr;}function _arrayWithHoles(arr) {if (Array.isArray(arr)) return arr;}function _defineProperty(obj, key, value) {if (key in obj) {Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true });} else {obj[key] = value;}return obj;}function _toConsumableArray(arr) {return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread();}function _nonIterableSpread() {throw new TypeError("Invalid attempt to spread non-iterable instance");}function _iterableToArray(iter) {if (Symbol.iterator in Object(iter) || Object.prototype.toString.call(iter) === "[object Arguments]") return Array.from(iter);}function _arrayWithoutHoles(arr) {if (Array.isArray(arr)) {for (var i = 0, arr2 = new Array(arr.length); i < arr.length; i++) {arr2[i] = arr[i];}return arr2;}}
 
 var _toString = Object.prototype.toString;
 var hasOwnProperty = Object.prototype.hasOwnProperty;
@@ -74,7 +50,198 @@ var camelize = cached(function (str) {
   return str.replace(camelizeRE, function (_, c) {return c ? c.toUpperCase() : '';});
 });
 
-var SYNC_API_RE = /^\$|getSubNVueById|requireNativePlugin|upx2px|hideKeyboard|canIUse|^create|Sync$|Manager$|base64ToArrayBuffer|arrayBufferToBase64/;
+var HOOKS = [
+'invoke',
+'success',
+'fail',
+'complete',
+'returnValue'];
+
+
+var globalInterceptors = {};
+var scopedInterceptors = {};
+
+function mergeHook(parentVal, childVal) {
+  var res = childVal ?
+  parentVal ?
+  parentVal.concat(childVal) :
+  Array.isArray(childVal) ?
+  childVal : [childVal] :
+  parentVal;
+  return res ?
+  dedupeHooks(res) :
+  res;
+}
+
+function dedupeHooks(hooks) {
+  var res = [];
+  for (var i = 0; i < hooks.length; i++) {
+    if (res.indexOf(hooks[i]) === -1) {
+      res.push(hooks[i]);
+    }
+  }
+  return res;
+}
+
+function removeHook(hooks, hook) {
+  var index = hooks.indexOf(hook);
+  if (index !== -1) {
+    hooks.splice(index, 1);
+  }
+}
+
+function mergeInterceptorHook(interceptor, option) {
+  Object.keys(option).forEach(function (hook) {
+    if (HOOKS.indexOf(hook) !== -1 && isFn(option[hook])) {
+      interceptor[hook] = mergeHook(interceptor[hook], option[hook]);
+    }
+  });
+}
+
+function removeInterceptorHook(interceptor, option) {
+  if (!interceptor || !option) {
+    return;
+  }
+  Object.keys(option).forEach(function (hook) {
+    if (HOOKS.indexOf(hook) !== -1 && isFn(option[hook])) {
+      removeHook(interceptor[hook], option[hook]);
+    }
+  });
+}
+
+function addInterceptor(method, option) {
+  if (typeof method === 'string' && isPlainObject(option)) {
+    mergeInterceptorHook(scopedInterceptors[method] || (scopedInterceptors[method] = {}), option);
+  } else if (isPlainObject(method)) {
+    mergeInterceptorHook(globalInterceptors, method);
+  }
+}
+
+function removeInterceptor(method, option) {
+  if (typeof method === 'string') {
+    if (isPlainObject(option)) {
+      removeInterceptorHook(scopedInterceptors[method], option);
+    } else {
+      delete scopedInterceptors[method];
+    }
+  } else if (isPlainObject(method)) {
+    removeInterceptorHook(globalInterceptors, method);
+  }
+}
+
+function wrapperHook(hook) {
+  return function (data) {
+    return hook(data) || data;
+  };
+}
+
+function isPromise(obj) {
+  return !!obj && (typeof obj === 'object' || typeof obj === 'function') && typeof obj.then === 'function';
+}
+
+function queue(hooks, data) {
+  var promise = false;
+  for (var i = 0; i < hooks.length; i++) {
+    var hook = hooks[i];
+    if (promise) {
+      promise = Promise.then(wrapperHook(hook));
+    } else {
+      var res = hook(data);
+      if (isPromise(res)) {
+        promise = Promise.resolve(res);
+      }
+      if (res === false) {
+        return {
+          then: function then() {} };
+
+      }
+    }
+  }
+  return promise || {
+    then: function then(callback) {
+      return callback(data);
+    } };
+
+}
+
+function wrapperOptions(interceptor) {var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+  ['success', 'fail', 'complete'].forEach(function (name) {
+    if (Array.isArray(interceptor[name])) {
+      var oldCallback = options[name];
+      options[name] = function callbackInterceptor(res) {
+        queue(interceptor[name], res).then(function (res) {
+          /* eslint-disable no-mixed-operators */
+          return isFn(oldCallback) && oldCallback(res) || res;
+        });
+      };
+    }
+  });
+  return options;
+}
+
+function wrapperReturnValue(method, returnValue) {
+  var returnValueHooks = [];
+  if (Array.isArray(globalInterceptors.returnValue)) {
+    returnValueHooks.push.apply(returnValueHooks, _toConsumableArray(globalInterceptors.returnValue));
+  }
+  var interceptor = scopedInterceptors[method];
+  if (interceptor && Array.isArray(interceptor.returnValue)) {
+    returnValueHooks.push.apply(returnValueHooks, _toConsumableArray(interceptor.returnValue));
+  }
+  returnValueHooks.forEach(function (hook) {
+    returnValue = hook(returnValue) || returnValue;
+  });
+  return returnValue;
+}
+
+function getApiInterceptorHooks(method) {
+  var interceptor = Object.create(null);
+  Object.keys(globalInterceptors).forEach(function (hook) {
+    if (hook !== 'returnValue') {
+      interceptor[hook] = globalInterceptors[hook].slice();
+    }
+  });
+  var scopedInterceptor = scopedInterceptors[method];
+  if (scopedInterceptor) {
+    Object.keys(scopedInterceptor).forEach(function (hook) {
+      if (hook !== 'returnValue') {
+        interceptor[hook] = (interceptor[hook] || []).concat(scopedInterceptor[hook]);
+      }
+    });
+  }
+  return interceptor;
+}
+
+function invokeApi(method, api, options) {for (var _len = arguments.length, params = new Array(_len > 3 ? _len - 3 : 0), _key = 3; _key < _len; _key++) {params[_key - 3] = arguments[_key];}
+  var interceptor = getApiInterceptorHooks(method);
+  if (interceptor && Object.keys(interceptor).length) {
+    if (Array.isArray(interceptor.invoke)) {
+      var res = queue(interceptor.invoke, options);
+      return res.then(function (options) {
+        return api.apply(void 0, [wrapperOptions(interceptor, options)].concat(params));
+      });
+    } else {
+      return api.apply(void 0, [wrapperOptions(interceptor, options)].concat(params));
+    }
+  }
+  return api.apply(void 0, [options].concat(params));
+}
+
+var promiseInterceptor = {
+  returnValue: function returnValue(res) {
+    if (!isPromise(res)) {
+      return res;
+    }
+    return res.then(function (res) {
+      return res[1];
+    }).catch(function (res) {
+      return res[0];
+    });
+  } };
+
+
+var SYNC_API_RE =
+/^\$|interceptors|Interceptor$|getSubNVueById|requireNativePlugin|upx2px|hideKeyboard|canIUse|^create|Sync$|Manager$|base64ToArrayBuffer|arrayBufferToBase64/;
 
 var CONTEXT_API_RE = /^create|Manager$/;
 
@@ -113,12 +280,12 @@ function promisify(name, api) {
   if (!shouldPromise(name)) {
     return api;
   }
-  return function promiseApi() {var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};for (var _len = arguments.length, params = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {params[_key - 1] = arguments[_key];}
+  return function promiseApi() {var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};for (var _len2 = arguments.length, params = new Array(_len2 > 1 ? _len2 - 1 : 0), _key2 = 1; _key2 < _len2; _key2++) {params[_key2 - 1] = arguments[_key2];}
     if (isFn(options.success) || isFn(options.fail) || isFn(options.complete)) {
-      return api.apply(void 0, [options].concat(params));
+      return wrapperReturnValue(name, invokeApi.apply(void 0, [name, api, options].concat(params)));
     }
-    return handlePromise(new Promise(function (resolve, reject) {
-      api.apply(void 0, [Object.assign({}, options, {
+    return wrapperReturnValue(name, handlePromise(new Promise(function (resolve, reject) {
+      invokeApi.apply(void 0, [name, api, Object.assign({}, options, {
         success: resolve,
         fail: reject })].concat(
       params));
@@ -134,7 +301,7 @@ function promisify(name, api) {
 
         };
       }
-    }));
+    })));
   };
 }
 
@@ -179,6 +346,19 @@ function upx2px(number, newDeviceWidth) {
   }
   return number < 0 ? -result : result;
 }
+
+var interceptors = {
+  promiseInterceptor: promiseInterceptor };
+
+
+
+
+var baseApi = /*#__PURE__*/Object.freeze({
+  upx2px: upx2px,
+  interceptors: interceptors,
+  addInterceptor: addInterceptor,
+  removeInterceptor: removeInterceptor });
+
 
 var previewImage = {
   args: function args(fromArgs) {
@@ -422,7 +602,7 @@ function initTriggerEvent(mpInstance) {
     }
   }
   var oldTriggerEvent = mpInstance.triggerEvent;
-  mpInstance.triggerEvent = function (event) {for (var _len2 = arguments.length, args = new Array(_len2 > 1 ? _len2 - 1 : 0), _key2 = 1; _key2 < _len2; _key2++) {args[_key2 - 1] = arguments[_key2];}
+  mpInstance.triggerEvent = function (event) {for (var _len3 = arguments.length, args = new Array(_len3 > 1 ? _len3 - 1 : 0), _key3 = 1; _key3 < _len3; _key3++) {args[_key3 - 1] = arguments[_key3];}
     return oldTriggerEvent.apply(mpInstance, [customize(event)].concat(args));
   };
 }
@@ -435,7 +615,7 @@ function initHook(name, options) {
     };
   } else {
     options[name] = function () {
-      initTriggerEvent(this);for (var _len3 = arguments.length, args = new Array(_len3), _key3 = 0; _key3 < _len3; _key3++) {args[_key3] = arguments[_key3];}
+      initTriggerEvent(this);for (var _len4 = arguments.length, args = new Array(_len4), _key4 = 0; _key4 < _len4; _key4++) {args[_key4] = arguments[_key4];}
       return oldHook.apply(this, args);
     };
   }
@@ -1228,8 +1408,8 @@ var uni = {};
 if (typeof Proxy !== 'undefined' && "mp-weixin" !== 'app-plus') {
   uni = new Proxy({}, {
     get: function get(target, name) {
-      if (name === 'upx2px') {
-        return upx2px;
+      if (baseApi[name]) {
+        return baseApi[name];
       }
       if (api[name]) {
         return promisify(name, api[name]);
@@ -1252,7 +1432,9 @@ if (typeof Proxy !== 'undefined' && "mp-weixin" !== 'app-plus') {
     } });
 
 } else {
-  uni.upx2px = upx2px;
+  Object.keys(baseApi).forEach(function (name) {
+    uni[name] = baseApi[name];
+  });
 
   {
     Object.keys(todoApis).forEach(function (name) {
@@ -1287,191 +1469,7 @@ var uni$1 = uni;var _default =
 uni$1;exports.default = _default;
 
 /***/ }),
-
-/***/ "./node_modules/@dcloudio/vue-cli-plugin-uni/packages/mpvue-page-factory/index.js":
-/*!****************************************************************************************!*\
-  !*** ./node_modules/@dcloudio/vue-cli-plugin-uni/packages/mpvue-page-factory/index.js ***!
-  \****************************************************************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue */ "./node_modules/@dcloudio/vue-cli-plugin-uni/packages/mpvue/index.js");
-/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(vue__WEBPACK_IMPORTED_MODULE_0__);
-
-
-function callHook$1(vm, hook, params) {
-  var handlers = vm.$options[hook];
-  if (hook === 'onError' && handlers) {
-    handlers = [handlers];
-  }
-  if(typeof handlers === 'function'){
-    handlers = [handlers]
-  }
-
-  var ret;
-  if (handlers) {
-    for (var i = 0, j = handlers.length; i < j; i++) {
-//      try {
-        ret = handlers[i].call(vm, params);
-//       } catch (e) {//fixed by xxxxxx
-//         handleError(e, vm, (hook + " hook"));
-//       }
-    }
-  }
-  if (vm._hasHookEvent) {
-    vm.$emit('hook:' + hook);
-  }
-
-  // for child
-  if (vm.$children.length) {
-    vm.$children.forEach(function (v) {
-      return callHook$1(v, hook, params);
-    });
-  }
-
-  return ret
-}
-
-function getRootVueVm(page) {
-  return page.$vm.$root;
-}
-
-/* harmony default export */ __webpack_exports__["default"] = (function (App) {
-  return {
-    // 页面的初始数据
-    data: {
-      $root: {}
-    },
-
-    // mp lifecycle for vue
-    // 生命周期函数--监听页面加载
-    onLoad:function onLoad(query) {
-      //页面加载的时候
-      var app = new vue__WEBPACK_IMPORTED_MODULE_0___default.a(App);
-      // 挂载Vue对象到page上
-      this.$vm = app;
-      var rootVueVM = app.$root;
-      rootVueVM.__wxExparserNodeId__ = this.__wxExparserNodeId__//fixed by xxxxxx(createIntersectionObserver)
-      rootVueVM.__wxWebviewId__ = this.__wxWebviewId__//fixed by xxxxxx(createIntersectionObserver)
-      
-      //初始化mp对象
-      if (!rootVueVM.$mp) {
-        rootVueVM.$mp = {};
-      }
-      var mp = rootVueVM.$mp;
-      mp.mpType = 'page';
-      mp.page = this;
-      mp.query = query;
-      mp.status = 'load';
-      //mount 要在 mp.status = 'load';赋值之后，不然mount方法会重复添加微信Page
-      //具体原因参考mpvue核心库源码，_initMP方法
-      app.$mount();
-    },
-
-    handleProxy: function handleProxy(e) {
-      var rootVueVM = getRootVueVm(this);
-      return rootVueVM.$handleProxyWithVue(e)
-    },
-
-    // 生命周期函数--监听页面显示
-    onShow:function onShow() {
-      var rootVueVM = getRootVueVm(this);
-      var mp = rootVueVM.$mp;
-      mp.status = 'show';
-      callHook$1(rootVueVM, 'onShow');
-      //   // 只有页面需要 setData
-      rootVueVM.$nextTick(function () {
-        rootVueVM._initDataToMP();
-      });
-    },
-
-    // 生命周期函数--监听页面初次渲染完成
-    onReady:function onReady() {
-      var rootVueVM = getRootVueVm(this);
-      var mp = rootVueVM.$mp;
-      mp.status = 'ready';
-      callHook$1(rootVueVM, 'onReady');
-    },
-
-    // 生命周期函数--监听页面隐藏
-    onHide: function onHide() {
-      var rootVueVM = getRootVueVm(this);
-      var mp = rootVueVM.$mp;
-      mp.status = 'hide';
-      callHook$1(rootVueVM, 'onHide');
-    },
-
-    // 生命周期函数--监听页面卸载
-    onUnload: function onUnload() {
-      var rootVueVM = getRootVueVm(this);
-      callHook$1(rootVueVM, 'onUnload');
-      rootVueVM.$destroy();
-    },
-
-    // 页面相关事件处理函数--监听用户下拉动作
-    onPullDownRefresh: function onPullDownRefresh() {
-      var rootVueVM = getRootVueVm(this);
-      callHook$1(rootVueVM, 'onPullDownRefresh');
-    },
-
-    // 页面上拉触底事件的处理函数
-    onReachBottom: function onReachBottom() {
-      var rootVueVM = getRootVueVm(this);
-      callHook$1(rootVueVM, 'onReachBottom');
-    },
-
-    // Do something when page scroll
-    onPageScroll: function onPageScroll(options) {
-      var rootVueVM = getRootVueVm(this);
-      callHook$1(rootVueVM, 'onPageScroll', options);
-    },
-
-    // 当前是 tab 页时，点击 tab 时触发
-    onTabItemTap: function onTabItemTap(options) {
-      var rootVueVM = getRootVueVm(this);
-      callHook$1(rootVueVM, 'onTabItemTap', options);
-    },
-		
-    // // 用户点击右上角分享
-    onShareAppMessage: App.onShareAppMessage ?
-      function (options) {
-        var rootVueVM = getRootVueVm(this);
-        return callHook$1(rootVueVM, 'onShareAppMessage', options);
-      } : null,
-
-    //fixed by xxxxxx
-    onNavigationBarButtonTap: function onNavigationBarButtonTap(options) {
-        var rootVueVM = getRootVueVm(this);
-    		callHook$1(rootVueVM, "onNavigationBarButtonTap", options)
-    },
-    onNavigationBarSearchInputChanged: function onNavigationBarSearchInputChanged(options) {
-        var rootVueVM = getRootVueVm(this);
-    		callHook$1(rootVueVM, "onNavigationBarSearchInputChanged", options)
-    },
-    onNavigationBarSearchInputConfirmed: function onNavigationBarSearchInputConfirmed(options) {
-        var rootVueVM = getRootVueVm(this);
-    		callHook$1(rootVueVM, "onNavigationBarSearchInputConfirmed", options)
-    },
-    onNavigationBarSearchInputClicked: function onNavigationBarSearchInputClicked(options) {
-        var rootVueVM = getRootVueVm(this);
-    		callHook$1(rootVueVM, "onNavigationBarSearchInputClicked", options)
-    },
-    onBackPress: function onBackPress(options) {
-        var rootVueVM = getRootVueVm(this);
-    		return callHook$1(rootVueVM, "onBackPress",options)
-    },
-		$getAppWebview:function (e) {
-				return plus.webview.getWebviewById('' + this.__wxWebviewId__)
-		}
-  };
-});
-
-
-/***/ }),
-
-/***/ "./node_modules/@dcloudio/vue-cli-plugin-uni/packages/mpvue/index.js":
+/* 2 */
 /*!***************************************************************************!*\
   !*** ./node_modules/@dcloudio/vue-cli-plugin-uni/packages/mpvue/index.js ***!
   \***************************************************************************/
@@ -7086,11 +7084,361 @@ try {
     return Vue$3
 })
 
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../../../../webpack/buildin/global.js */ "./node_modules/webpack/buildin/global.js")))
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../../../../webpack/buildin/global.js */ 3)))
 
 /***/ }),
+/* 3 */
+/*!***********************************!*\
+  !*** (webpack)/buildin/global.js ***!
+  \***********************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
 
-/***/ "./node_modules/regenerator-runtime/runtime-module.js":
+var g;
+
+// This works in non-strict mode
+g = (function() {
+	return this;
+})();
+
+try {
+	// This works if eval is allowed (see CSP)
+	g = g || new Function("return this")();
+} catch (e) {
+	// This works if the window reference is available
+	if (typeof window === "object") g = window;
+}
+
+// g can still be undefined, but nothing to do about it...
+// We return undefined, instead of nothing here, so it's
+// easier to handle this case. if(!global) { ...}
+
+module.exports = g;
+
+
+/***/ }),
+/* 4 */
+/*!********************************************************************************************************!*\
+  !*** /Users/jerrio/Desktop/JumboX/TheShortFilmShow/short-film-show-client/TheShortFilmShow/pages.json ***!
+  \********************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+/***/ }),
+/* 5 */,
+/* 6 */,
+/* 7 */,
+/* 8 */,
+/* 9 */,
+/* 10 */
+/*!********************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/runtime/componentNormalizer.js ***!
+  \********************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return normalizeComponent; });
+/* globals __VUE_SSR_CONTEXT__ */
+
+// IMPORTANT: Do NOT use ES2015 features in this file (except for modules).
+// This module is a runtime utility for cleaner component module output and will
+// be included in the final webpack user bundle.
+
+function normalizeComponent (
+  scriptExports,
+  render,
+  staticRenderFns,
+  functionalTemplate,
+  injectStyles,
+  scopeId,
+  moduleIdentifier, /* server only */
+  shadowMode /* vue-cli only */
+) {
+  // Vue.extend constructor export interop
+  var options = typeof scriptExports === 'function'
+    ? scriptExports.options
+    : scriptExports
+
+  // render functions
+  if (render) {
+    options.render = render
+    options.staticRenderFns = staticRenderFns
+    options._compiled = true
+  }
+
+  // functional template
+  if (functionalTemplate) {
+    options.functional = true
+  }
+
+  // scopedId
+  if (scopeId) {
+    options._scopeId = 'data-v-' + scopeId
+  }
+
+  var hook
+  if (moduleIdentifier) { // server build
+    hook = function (context) {
+      // 2.3 injection
+      context =
+        context || // cached call
+        (this.$vnode && this.$vnode.ssrContext) || // stateful
+        (this.parent && this.parent.$vnode && this.parent.$vnode.ssrContext) // functional
+      // 2.2 with runInNewContext: true
+      if (!context && typeof __VUE_SSR_CONTEXT__ !== 'undefined') {
+        context = __VUE_SSR_CONTEXT__
+      }
+      // inject component styles
+      if (injectStyles) {
+        injectStyles.call(this, context)
+      }
+      // register component module identifier for async chunk inferrence
+      if (context && context._registeredComponents) {
+        context._registeredComponents.add(moduleIdentifier)
+      }
+    }
+    // used by ssr in case component is cached and beforeCreate
+    // never gets called
+    options._ssrRegister = hook
+  } else if (injectStyles) {
+    hook = shadowMode
+      ? function () { injectStyles.call(this, this.$root.$options.shadowRoot) }
+      : injectStyles
+  }
+
+  if (hook) {
+    if (options.functional) {
+      // for template-only hot-reload because in that case the render fn doesn't
+      // go through the normalizer
+      options._injectStyles = hook
+      // register for functioal component in vue file
+      var originalRender = options.render
+      options.render = function renderWithStyleInjection (h, context) {
+        hook.call(context)
+        return originalRender(h, context)
+      }
+    } else {
+      // inject component registration as beforeCreate hook
+      var existing = options.beforeCreate
+      options.beforeCreate = existing
+        ? [].concat(existing, hook)
+        : [hook]
+    }
+  }
+
+  return {
+    exports: scriptExports,
+    options: options
+  }
+}
+
+
+/***/ }),
+/* 11 */,
+/* 12 */
+/*!****************************************************************************************!*\
+  !*** ./node_modules/@dcloudio/vue-cli-plugin-uni/packages/mpvue-page-factory/index.js ***!
+  \****************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue */ 2);
+/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(vue__WEBPACK_IMPORTED_MODULE_0__);
+
+
+function callHook$1(vm, hook, params) {
+  var handlers = vm.$options[hook];
+  if (hook === 'onError' && handlers) {
+    handlers = [handlers];
+  }
+  if(typeof handlers === 'function'){
+    handlers = [handlers]
+  }
+
+  var ret;
+  if (handlers) {
+    for (var i = 0, j = handlers.length; i < j; i++) {
+//      try {
+        ret = handlers[i].call(vm, params);
+//       } catch (e) {//fixed by xxxxxx
+//         handleError(e, vm, (hook + " hook"));
+//       }
+    }
+  }
+  if (vm._hasHookEvent) {
+    vm.$emit('hook:' + hook);
+  }
+
+  // for child
+  if (vm.$children.length) {
+    vm.$children.forEach(function (v) {
+      return callHook$1(v, hook, params);
+    });
+  }
+
+  return ret
+}
+
+function getRootVueVm(page) {
+  return page.$vm.$root;
+}
+
+/* harmony default export */ __webpack_exports__["default"] = (function (App) {
+  return {
+    // 页面的初始数据
+    data: {
+      $root: {}
+    },
+
+    // mp lifecycle for vue
+    // 生命周期函数--监听页面加载
+    onLoad:function onLoad(query) {
+      //页面加载的时候
+      var app = new vue__WEBPACK_IMPORTED_MODULE_0___default.a(App);
+      // 挂载Vue对象到page上
+      this.$vm = app;
+      var rootVueVM = app.$root;
+      rootVueVM.__wxExparserNodeId__ = this.__wxExparserNodeId__//fixed by xxxxxx(createIntersectionObserver)
+      rootVueVM.__wxWebviewId__ = this.__wxWebviewId__//fixed by xxxxxx(createIntersectionObserver)
+      
+      //初始化mp对象
+      if (!rootVueVM.$mp) {
+        rootVueVM.$mp = {};
+      }
+      var mp = rootVueVM.$mp;
+      mp.mpType = 'page';
+      mp.page = this;
+      mp.query = query;
+      mp.status = 'load';
+      //mount 要在 mp.status = 'load';赋值之后，不然mount方法会重复添加微信Page
+      //具体原因参考mpvue核心库源码，_initMP方法
+      app.$mount();
+    },
+
+    handleProxy: function handleProxy(e) {
+      var rootVueVM = getRootVueVm(this);
+      return rootVueVM.$handleProxyWithVue(e)
+    },
+
+    // 生命周期函数--监听页面显示
+    onShow:function onShow() {
+      var rootVueVM = getRootVueVm(this);
+      var mp = rootVueVM.$mp;
+      mp.status = 'show';
+      callHook$1(rootVueVM, 'onShow');
+      //   // 只有页面需要 setData
+      rootVueVM.$nextTick(function () {
+        rootVueVM._initDataToMP();
+      });
+    },
+
+    // 生命周期函数--监听页面初次渲染完成
+    onReady:function onReady() {
+      var rootVueVM = getRootVueVm(this);
+      var mp = rootVueVM.$mp;
+      mp.status = 'ready';
+      callHook$1(rootVueVM, 'onReady');
+    },
+
+    // 生命周期函数--监听页面隐藏
+    onHide: function onHide() {
+      var rootVueVM = getRootVueVm(this);
+      var mp = rootVueVM.$mp;
+      mp.status = 'hide';
+      callHook$1(rootVueVM, 'onHide');
+    },
+
+    // 生命周期函数--监听页面卸载
+    onUnload: function onUnload() {
+      var rootVueVM = getRootVueVm(this);
+      callHook$1(rootVueVM, 'onUnload');
+      rootVueVM.$destroy();
+    },
+
+    // 页面相关事件处理函数--监听用户下拉动作
+    onPullDownRefresh: function onPullDownRefresh() {
+      var rootVueVM = getRootVueVm(this);
+      callHook$1(rootVueVM, 'onPullDownRefresh');
+    },
+
+    // 页面上拉触底事件的处理函数
+    onReachBottom: function onReachBottom() {
+      var rootVueVM = getRootVueVm(this);
+      callHook$1(rootVueVM, 'onReachBottom');
+    },
+
+    // Do something when page scroll
+    onPageScroll: function onPageScroll(options) {
+      var rootVueVM = getRootVueVm(this);
+      callHook$1(rootVueVM, 'onPageScroll', options);
+    },
+
+    // 当前是 tab 页时，点击 tab 时触发
+    onTabItemTap: function onTabItemTap(options) {
+      var rootVueVM = getRootVueVm(this);
+      callHook$1(rootVueVM, 'onTabItemTap', options);
+    },
+		
+    // // 用户点击右上角分享
+    onShareAppMessage: App.onShareAppMessage ?
+      function (options) {
+        var rootVueVM = getRootVueVm(this);
+        return callHook$1(rootVueVM, 'onShareAppMessage', options);
+      } : null,
+
+    //fixed by xxxxxx
+    onNavigationBarButtonTap: function onNavigationBarButtonTap(options) {
+        var rootVueVM = getRootVueVm(this);
+    		callHook$1(rootVueVM, "onNavigationBarButtonTap", options)
+    },
+    onNavigationBarSearchInputChanged: function onNavigationBarSearchInputChanged(options) {
+        var rootVueVM = getRootVueVm(this);
+    		callHook$1(rootVueVM, "onNavigationBarSearchInputChanged", options)
+    },
+    onNavigationBarSearchInputConfirmed: function onNavigationBarSearchInputConfirmed(options) {
+        var rootVueVM = getRootVueVm(this);
+    		callHook$1(rootVueVM, "onNavigationBarSearchInputConfirmed", options)
+    },
+    onNavigationBarSearchInputClicked: function onNavigationBarSearchInputClicked(options) {
+        var rootVueVM = getRootVueVm(this);
+    		callHook$1(rootVueVM, "onNavigationBarSearchInputClicked", options)
+    },
+    onBackPress: function onBackPress(options) {
+        var rootVueVM = getRootVueVm(this);
+    		return callHook$1(rootVueVM, "onBackPress",options)
+    },
+		$getAppWebview:function (e) {
+				return plus.webview.getWebviewById('' + this.__wxWebviewId__)
+		}
+  };
+});
+
+
+/***/ }),
+/* 13 */,
+/* 14 */,
+/* 15 */,
+/* 16 */,
+/* 17 */,
+/* 18 */
+/*!**********************************************************!*\
+  !*** ./node_modules/@babel/runtime/regenerator/index.js ***!
+  \**********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__(/*! regenerator-runtime */ 19);
+
+
+/***/ }),
+/* 19 */
 /*!************************************************************!*\
   !*** ./node_modules/regenerator-runtime/runtime-module.js ***!
   \************************************************************/
@@ -7121,7 +7469,7 @@ var oldRuntime = hadRuntime && g.regeneratorRuntime;
 // Force reevalutation of runtime.js.
 g.regeneratorRuntime = undefined;
 
-module.exports = __webpack_require__(/*! ./runtime */ "./node_modules/regenerator-runtime/runtime.js");
+module.exports = __webpack_require__(/*! ./runtime */ 20);
 
 if (hadRuntime) {
   // Restore the original runtime.
@@ -7137,8 +7485,7 @@ if (hadRuntime) {
 
 
 /***/ }),
-
-/***/ "./node_modules/regenerator-runtime/runtime.js":
+/* 20 */
 /*!*****************************************************!*\
   !*** ./node_modules/regenerator-runtime/runtime.js ***!
   \*****************************************************/
@@ -7868,145 +8215,6 @@ if (hadRuntime) {
 );
 
 
-/***/ }),
-
-/***/ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js":
-/*!********************************************************************!*\
-  !*** ./node_modules/vue-loader/lib/runtime/componentNormalizer.js ***!
-  \********************************************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return normalizeComponent; });
-/* globals __VUE_SSR_CONTEXT__ */
-
-// IMPORTANT: Do NOT use ES2015 features in this file (except for modules).
-// This module is a runtime utility for cleaner component module output and will
-// be included in the final webpack user bundle.
-
-function normalizeComponent (
-  scriptExports,
-  render,
-  staticRenderFns,
-  functionalTemplate,
-  injectStyles,
-  scopeId,
-  moduleIdentifier, /* server only */
-  shadowMode /* vue-cli only */
-) {
-  // Vue.extend constructor export interop
-  var options = typeof scriptExports === 'function'
-    ? scriptExports.options
-    : scriptExports
-
-  // render functions
-  if (render) {
-    options.render = render
-    options.staticRenderFns = staticRenderFns
-    options._compiled = true
-  }
-
-  // functional template
-  if (functionalTemplate) {
-    options.functional = true
-  }
-
-  // scopedId
-  if (scopeId) {
-    options._scopeId = 'data-v-' + scopeId
-  }
-
-  var hook
-  if (moduleIdentifier) { // server build
-    hook = function (context) {
-      // 2.3 injection
-      context =
-        context || // cached call
-        (this.$vnode && this.$vnode.ssrContext) || // stateful
-        (this.parent && this.parent.$vnode && this.parent.$vnode.ssrContext) // functional
-      // 2.2 with runInNewContext: true
-      if (!context && typeof __VUE_SSR_CONTEXT__ !== 'undefined') {
-        context = __VUE_SSR_CONTEXT__
-      }
-      // inject component styles
-      if (injectStyles) {
-        injectStyles.call(this, context)
-      }
-      // register component module identifier for async chunk inferrence
-      if (context && context._registeredComponents) {
-        context._registeredComponents.add(moduleIdentifier)
-      }
-    }
-    // used by ssr in case component is cached and beforeCreate
-    // never gets called
-    options._ssrRegister = hook
-  } else if (injectStyles) {
-    hook = shadowMode
-      ? function () { injectStyles.call(this, this.$root.$options.shadowRoot) }
-      : injectStyles
-  }
-
-  if (hook) {
-    if (options.functional) {
-      // for template-only hot-reload because in that case the render fn doesn't
-      // go through the normalizer
-      options._injectStyles = hook
-      // register for functioal component in vue file
-      var originalRender = options.render
-      options.render = function renderWithStyleInjection (h, context) {
-        hook.call(context)
-        return originalRender(h, context)
-      }
-    } else {
-      // inject component registration as beforeCreate hook
-      var existing = options.beforeCreate
-      options.beforeCreate = existing
-        ? [].concat(existing, hook)
-        : [hook]
-    }
-  }
-
-  return {
-    exports: scriptExports,
-    options: options
-  }
-}
-
-
-/***/ }),
-
-/***/ "./node_modules/webpack/buildin/global.js":
-/*!***********************************!*\
-  !*** (webpack)/buildin/global.js ***!
-  \***********************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-var g;
-
-// This works in non-strict mode
-g = (function() {
-	return this;
-})();
-
-try {
-	// This works if eval is allowed (see CSP)
-	g = g || new Function("return this")();
-} catch (e) {
-	// This works if the window reference is available
-	if (typeof window === "object") g = window;
-}
-
-// g can still be undefined, but nothing to do about it...
-// We return undefined, instead of nothing here, so it's
-// easier to handle this case. if(!global) { ...}
-
-module.exports = g;
-
-
 /***/ })
-
-}]);
+]]);
 //# sourceMappingURL=../../.sourcemap/mp-weixin/common/vendor.js.map

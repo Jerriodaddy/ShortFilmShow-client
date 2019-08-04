@@ -189,12 +189,18 @@
 				uni.showLoading({
 					title: 'Loading...',
 				});
+				console.log("当前请求页：" + page);
 				uni.request({
 					url: serverUrl + '/video/showAll',
 					data: {
 						page: page,
+						pageSize: 4,
 					},
 					method: "POST",
+					header: {
+						'content-type': 'application/x-www-form-urlencoded'
+					},
+					
 					success: (res) => {
 						uni.hideLoading();
 						console.log(res.data.data);
@@ -205,9 +211,7 @@
 
 						var videoList = that.videoList;
 						var newVideoList = res.data.data.rows;
-						
-						console.log(newVideoList);
-						
+
 						that.videoList = videoList.concat(newVideoList);
 						that.page = page;
 						that.totalPage = res.data.data.total;
@@ -229,7 +233,7 @@
 			},
 
 			navigatToVideoPlay: function(film) {
-				console.log(film);
+				// console.log(film);
 				film = JSON.stringify(film)
 				uni.navigateTo({
 					url: '../videoplay/videoplay?film=' + film
@@ -244,7 +248,7 @@
 <style>
 	page {
 		width: 100%;
-		height: 150%;
+		height: 200%;
 		display: flex;
 		flex-wrap: wrap;
 		align-items: flex-start;
@@ -342,7 +346,6 @@
 	.swiper-box-list {
 		flex: 1;
 		width: 100%;
-		height: auto;
 		background-color: #000000;
 	}
 
@@ -412,4 +415,6 @@
 		width: 245.9upx;
 		height: 330upx;
 	}
+
+
 </style>

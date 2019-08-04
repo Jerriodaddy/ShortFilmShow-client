@@ -9,15 +9,20 @@
 			}
 		},
 		{
-			"path": "pages/videoplay/videoplay",
-			"style": {}
+		    "path" : "pages/watchhistory/watchhistory",
+		    "style" : {}
 		},
 		{
-			"path": "pages/hot/hot",
+			"path": "pages/filmlibrary/filmlibrary",
 			"style": {
 				"enablePullDownRefresh": true
 			}
 		},
+		{
+			"path": "pages/videoplay/videoplay",
+			"style": {}
+		},
+		
 		{
 			"path": "pages/profile/profile"
 		},
@@ -25,8 +30,6 @@
 			"path": "pages/login/login",
 			"style": {}
 		},
-		
-		
 		{
 			"path": "pages/register/register",
 			"style": {}
@@ -52,6 +55,7 @@
             "path" : "pages/profileinfo/profileinfo",
             "style" : {}
         }
+        
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "white",
@@ -70,8 +74,8 @@
 				"selectedIconPath": "static/icons/home.png"
 			},
 			{
-				"pagePath": "pages/hot/hot",
-				"text": "Hot",
+				"pagePath": "pages/filmlibrary/filmlibrary",
+				"text": "Filmlibrary",
 				"iconPath": "static/icons/boxes.png",
 				"selectedIconPath": "static/icons/boxes.png"
 			},

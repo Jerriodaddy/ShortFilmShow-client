@@ -8,7 +8,7 @@
 			</view>
 			<!-- <text class="change">change picture</text> -->
 			<!-- 			<button type="primary" @click="changeFaceImage" @tap="upload">change picture</button>-->
-			<view class="">Guetta</view>
+			<view class="">{{userInfo.username}}</view>
 		</view>
 		<!-- 数据框 pink-->
 		<view class="data_box column_center">
@@ -25,7 +25,7 @@
 			<view class="drawer column_center">
 				<image src="../../static/icons/history.png" mode="" class="icon-proflie"></image>
 				<view class="profile_title column_center">
-					<text class="profiel_title_text">{{history}}</text>
+					<navigator url="../watchhistory/watchhistory" hover-class="navigator-hover" class="profiel_title_text">{{history}}</navigator>
 				</view>
 			</view>
 
@@ -48,7 +48,10 @@
 			return {
 				faceUrl: '../../static/icons/profilePic.png',
 				src: '',
-				history: 'Watch history'
+				history: 'Watch history',
+				userInfo: {
+					username: 'Please login',
+				}
 			}
 		},
 
@@ -63,11 +66,10 @@
 			// if (avatar) {
 			// 	this.src = avatar;
 			// }
-			
-			uni.showLoading({
-				title: 'Loding...',
-			});
 
+		},
+		
+		onShow() {
 			var userInfo = this.getGlobalUserInfo();
 			if (userInfo == null || userInfo == undefined || userInfo == "") {
 				uni.navigateTo({
@@ -75,10 +77,11 @@
 				});
 				return;
 			}
-
+			
 			console.log(userInfo);
 			this.queryUserInfo(userInfo);
 		},
+		
 		methods: {
 			upload() {
 				var userInfo = this.getGlobalUserInfo();
@@ -103,7 +106,7 @@
 				});
 			},
 
-			// 用户注销，清楚用户缓存
+			// 用户注销，清除用户缓存
 			logout: function() {
 				var userInfo = this.getGlobalUserInfo();
 				if (userInfo == null || userInfo == undefined || userInfo == "") {
@@ -144,6 +147,9 @@
 			},
 
 			queryUserInfo(userInfo) {
+				uni.showLoading({
+					title: 'Loding...',
+				});
 				var that = this;
 				uni.request({
 					url: that.$serverUrl + '/user/query?userId=' + userInfo.id,
@@ -154,12 +160,15 @@
 						'userToken': userInfo.userToken,
 					},
 					success: (res) => {
+						uni.hideLoading();
+						
 						console.log(res.data);
 						var status = res.data.status;
 						if (status == 200) {
 							uni.hideLoading();
 							// 赋值到当前页面
 							var userInfo = res.data.data;
+							that.userInfo = userInfo;
 							if (userInfo.faceImage != null) {
 								that.faceUrl = that.$serverUrl + userInfo.faceImage;
 							}

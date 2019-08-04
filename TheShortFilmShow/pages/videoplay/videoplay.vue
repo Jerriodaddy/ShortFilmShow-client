@@ -1,17 +1,28 @@
 <template>
 	<view class="VP-back">
+		<!-- 视频播放器，此处代码问题较多，缺少 CSS 属性，年代久远，不要乱动 -->
 		<view class="VP-screen">
 			<view class="screen">
-				<video class="play-video" id="Vendetta (ven·dét·ta)" :src="filmUrl" @error="videoErrorCallback" controls></video>
+				<video class="play-video" :src="filmUrl" @error="videoErrorCallback" controls></video>
 			</view>
 		</view>
-		<view class="data_box column_center">
-			<text class="data_box_text">Follow</text>
-			<view class="data_border"></view>
-			<text class="data_box_text">Fans</text>
-			<view class="data_border"></view>
-			<text class="data_box_text">Donate</text>
+
+		<!-- 电影制作人信息栏 -->
+		<view class="filmmaker_title column_center">
+			<text class="filmmaker_title_text">Director</text>
 		</view>
+		<view class="data_box column_center">
+			<image src="../../static/icons/logo.png" class="filmmaker-pic"></image>
+			<view class="filmmaker-name column_center">
+				<text class="filmmaker-name-text">Guetta Xia</text>
+			</view>
+			<!-- 前面两项，总左边距为46% -->
+			<!-- 			<button size="mini" plain="true" hover-class="button-hover" type="primary" class="msg_button">Message</button>
+ -->
+			<button size="mini" plain="true" hover-class="button-hover" type="primary" class="follow_button">Follow</button>
+		</view>
+
+		<!-- 控制台，但 control_interface 属性为空 -->
 		<view class="control_interface">
 			<scroll-view class="top-menu-view" scroll-x="true" :scroll-left="scrollLeft">
 				<block v-for="(menuTabs,index) in menuTabs" :key="index">
@@ -56,91 +67,49 @@
 								<view class="new_comment hor_center">
 									<text class="latest_comment hor_center">Latest comment</text>
 								</view>
-								<!-- 分割线 -->
-								<view class="border_line"></view>
-								<view class="videocomment">
-									<view class="user_info">
-										<image class="comment_profile_pic" src="../../static/icons/logo.png"></image>
-										<view class="user_info_name">
-											<text class="user_info_name_text">Guetta</text>
-										</view>
-									</view>
-									<view class="comment_box">
-										<view class="time">
-											<text class="time_text">22-06-2019</text>
-										</view>
-										<view class="content_box">
-											<text class="content_text">
-												The magical war has gradually entered a climax. </text>
-											<view class="text_i"></view>
-										</view>
-										<view class="comment_show super_center">
-											Show more
-										</view>
-									</view>
-								</view>
-								<!-- 分割线 -->
-								<view class="border_line"></view>
 
-								<view class="videocomment">
-									<view class="user_info">
-										<image class="comment_profile_pic" src="../../static/icons/logo.png"></image>
-										<view class="user_info_name">
-											<text class="user_info_name_text">Guetta</text>
+									<view class="videocomment" v-for="item in comments" v-bind:key="item.id">
+										<!-- 分割线 -->
+										<view class="border_line"></view>
+										<view class="user_info">
+											<image class="comment_profile_pic" src="../../static/icons/logo.png"></image>
+											<view class="user_info_name">
+												<text class="user_info_name_text">{{item.fromUserId}}</text>
+											</view>
+										</view>
+										<view class="comment_box">
+											<view class="time">
+												<text class="time_text">{{item.createDate}}</text>
+											</view>
+											<view class="content_box">
+												<text class="content_text">
+													{{item.comment}}</text>
+												<view class="text_i"></view>
+											</view>
+											<view class="comment_show super_center">
+												Show more
+											</view>
 										</view>
 									</view>
-									<view class="comment_box">
-										<view class="time">
-											<text class="time_text">2-06-2019</text>
-										</view>
-										<view class="content_box">
-											<text class="content_text">
-												This film is really nice and I almost remember everything in this film. </text>
-											<view class="text_i"></view>
-										</view>
-										<view class="comment_show super_center">
-											Show more
-										</view>
-									</view>
-								</view>
-								<!-- 分割线 -->
-								<view class="border_line"></view>
-
-								<view class="videocomment">
-									<view class="user_info">
-										<image class="comment_profile_pic" src="../../static/icons/logo.png"></image>
-										<view class="user_info_name">
-											<text class="user_info_name_text">Guetta</text>
-										</view>
-									</view>
-									<view class="comment_box">
-										<view class="time">
-											<text class="time_text">17-09-2018</text>
-										</view>
-										<view class="content_box">
-											<text class="content_text">
-												I really like the actors in this film. For their really nice outlook and their suits. It's really cool.
-											</text>
-											<view class="text_i"></view>
-										</view>
-										<view class="comment_show super_center">
-											Show more
-										</view>
-									</view>
-								</view>
-								<!-- 分割线 -->
-								<view class="border_line"></view>
+				
 							</block>
 						</scroll-view>
 					</swiper-item>
 				</block>
 			</swiper>
+
+			<!-- 评论表单，年代久远，研究版不做修改 -->
 			<view class="V-com-area">
-				<view class="com-write">
-					<input name="comment" class="input" placeholder="Write some comment?" />
-				</view>
+				<form @submit="comment">
+					<view class="com-write">
+						<input name="comment" class="input" placeholder="Write some comment?" />
+						<button formType="submit">send</button>
+					</view>
+				</form>
 			</view>
 		</view>
+
+		<!-- like button，暂时未编辑效果 -->
 		<view class="">
 			<image class="like_button" src="../../static/icons/like2.png" mode="aspectFit"></image>
 		</view>
@@ -169,15 +138,13 @@
 					[],
 					[]
 				],
-				// 								indicatorDots: true,
-				// 								autoplay: true,
-				// 								interval: 5000,
-				// 								duration: 500,
-				// 								circular: true
-
+				
 				// 电影数据
 				filmUrl: "",
 				film: {},
+				
+				// 评论
+				comments: {},
 			}
 		},
 
@@ -205,7 +172,11 @@
 
 			var film = JSON.parse(options.film);
 			this.filmUrl = this.$serverUrl + film.videoPath;
+			this.film = film;
 			console.log(film);
+			
+			// 获取评论
+			this.getComment();
 		},
 
 		methods: {
@@ -234,6 +205,7 @@
 				let winWidth = uni.getSystemInfoSync().windowWidth;
 				this.scrollLeft = leftWidthSum > winWidth ? (leftWidthSum - winWidth) : 0
 			},
+			
 			getWidth: function(id) { //得到元素的宽高
 				return new Promise((res, rej) => {
 					uni.createSelectorQuery().select("#" + id).fields({
@@ -244,17 +216,60 @@
 					}).exec();
 				})
 			},
+			
 			loadMore: function(tabIndex) {
-				console.log('正在加载更多数据。。。')
+				console.log('正在加载更多数据。。。');
 				this.getDateList(tabIndex);
 			},
+			
 			getDateList: function(tabIndex) {
 				for (var i = 0; i < 20; i++) {
 					var entity = this.menuTabs[tabIndex].name + (this.swiperDateList[tabIndex].length);
 					this.swiperDateList[tabIndex].push(entity);
 				}
+			},
+			
+			comment: function(e){
+				var formVar = e.detail.value;
+				// console.log("filmId="+filmId);
+				var that = this;
+				uni.request({
+					url: that.$serverUrl + '/video/saveComment',
+					data: {
+						videoId: that.film.id,
+						fromUserId: "test",
+						comment: formVar.comment,
+					},
+					method: "POST",
+					header: {
+						'content-type': 'application/json'
+					},
+					
+					success: (res) => {
+						console.log(res.data);
+					}
+				});
+			},
+			
+			getComment: function(){
+				// TODO 缺少分页逻辑
+				var that = this;
+				uni.request({
+					url: that.$serverUrl + '/video/getAllComments',
+					data: {
+						videoId: that.film.id,
+					},
+					method: "POST",
+					header: {
+						'content-type': 'application/x-www-form-urlencoded'
+					},
+					
+					success: (res) => {
+						that.comments = res.data.data.rows;
+						console.log(that.comments);
+					}
+				});
 			}
-
 		}
 
 	}
@@ -263,7 +278,7 @@
 <style>
 	page {
 		width: 100%;
-		height: 200%;
+		height: 100%;
 		/* display: flex;
 		flex-wrap: wrap;
 		align-items: flex-start;
@@ -277,11 +292,17 @@
 	}
 
 	.play-video {
+		height: 380upx;
 		width: 100%;
 	}
 
 	.V-intro {
 		height: 50%;
+	}
+
+	.screen {
+		width: 100%;
+		height: 380upx;
 	}
 
 	/* 影片图片、名字、评分显示 */
@@ -520,6 +541,35 @@
 	}
 
 	/* 评论属性 */
+	.content_box {
+		margin-left: 20upx;
+		margin-right: 40upx;
+		margin-top: 50upx;
+		margin-bottom: 20upx;
+		position: absolute;
+		height: 60%;
+		width: 95%;
+
+	}
+
+	.text_i {
+		display: inline-block;
+		width: 100%;
+	}
+
+	.content_text {
+		/* display: inline-block; */
+		width: 100%;
+		/* text-align: justify; */
+		font-size: medium;
+		color: white;
+		/* 这里用 webkit 暂时实现隐藏过长字符 */
+		overflow: hidden;
+		text-overflow: ellipsis;
+		display: -webkit-box;
+		-webkit-line-clamp: 2;
+		-webkit-box-orient: vertical;
+	}
 
 	.new_comment {
 		width: 100%;
@@ -562,30 +612,6 @@
 		align-content: center;
 		align-items: center;
 		justify-content: center;
-	}
-
-	.content_box {
-		margin-left: 20upx;
-		margin-right: 40upx;
-		margin-top: 50upx;
-		margin-bottom: 20upx;
-		position: absolute;
-		height: 60%;
-		width: 95%;
-
-	}
-
-	.text_i {
-		display: inline-block;
-		width: 100%;
-	}
-
-	.content_text {
-		display: inline-block;
-		width: 100%;
-		text-align: justify;
-		font-size: medium;
-		color: white;
 	}
 
 	.user_info_name_text {
@@ -663,9 +689,8 @@
 	.data_box {
 		position: relative;
 		display: flex;
-		height: 80upx;
+		height: 90upx;
 		width: 100%;
-		justify-content: space-around;
 		background-color: white;
 	}
 
@@ -677,5 +702,52 @@
 		width: 2upx;
 		background-color: darkgray;
 		height: 90upx;
+	}
+
+	/* 最新更新，导演卡片 */
+	.filmmaker_title {
+		/* background-color: white; */
+		background: linear-gradient(to right, #666666, white);
+		height: 48upx;
+		width: 100%;
+
+	}
+
+	.filmmaker_title_text {
+		position: absolute;
+		margin-left: 4%;
+		color: black;
+		font-size: large;
+		font-style: oblique;
+		font-weight: 900;
+	}
+
+	.filmmaker-pic {
+		position: absolute;
+		border: 2upx solid #A9A9A9;
+		border-radius: 100upx;
+		height: 65upx;
+		width: 65upx;
+		margin-left: 4%;
+	}
+
+	.filmmaker-name {
+		width: 30%;
+		position: absolute;
+		margin-left: 16%;
+	}
+
+	.filmmaker-name-text {
+		font-size: medium;
+	}
+
+	.msg_button {
+		margin-left: 46%;
+		position: absolute;
+	}
+
+	.follow_button {
+		position: absolute;
+		margin-left: 75%;
 	}
 </style>
